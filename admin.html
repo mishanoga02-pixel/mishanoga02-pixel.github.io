@@ -92,26 +92,26 @@
             background: linear-gradient(135deg, #ff6b6b, #ff4444);
             color: #fff;
             border: none;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 11px;
             transition: 0.3s;
-            margin: 3px;
+            margin: 2px;
         }
         .btn-vomit:hover { transform: scale(1.05); }
         .btn-vomit-stop {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: #fff;
             border: none;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 11px;
             transition: 0.3s;
-            margin: 3px;
+            margin: 2px;
         }
         .btn-vomit-stop:hover { transform: scale(1.05); }
 
@@ -119,36 +119,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            margin-bottom: 5px;
+            border-radius: 6px;
+            margin-bottom: 4px;
             flex-wrap: wrap;
             gap: 5px;
+            font-size: 13px;
         }
-        .visitor-item .ip { font-family: monospace; color: #00d4ff; font-size: 13px; }
-        .visitor-item .status { font-size: 12px; }
+        .visitor-item .ip { font-family: monospace; color: #00d4ff; }
         .visitor-item .status.online { color: #2ecc71; }
         .visitor-item .status.offline { color: #ff4444; }
-        .visitor-item .vomit-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #ff4444; color: #fff; }
-
-        .tool-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 10px 0;
-        }
-        .tool-card {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 2px solid #00d4ff;
-        }
-        .tool-card h4 { color: #aaaacc; margin-bottom: 5px; }
-        .tool-card p { color: #8888aa; font-size: 13px; margin-bottom: 8px; }
+        .visitor-item .vomit-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #ff4444; color: #fff; }
 
         .btn-danger { background: #ff4444; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; margin: 5px; }
         .btn-danger:hover { transform: scale(1.05); background: #cc3333; }
+
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 10px 0; }
+        .tool-card { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 2px solid #00d4ff; }
+        .tool-card h4 { color: #aaaacc; margin-bottom: 5px; }
+        .tool-card p { color: #8888aa; font-size: 13px; margin-bottom: 8px; }
 
         @keyframes slideIn { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
 
@@ -165,7 +155,6 @@
 
     <div class="container">
 
-        <!-- ===== HEADER ===== -->
         <div class="header">
             <div>
                 <h1>🔐 Админ-панель</h1>
@@ -174,7 +163,6 @@
             <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
         </div>
 
-        <!-- ===== СТАТИСТИКА ===== -->
         <div class="stats-grid">
             <div class="stat-card"><div class="num" id="totalUsers">0</div><div class="label">Всего посетителей</div></div>
             <div class="stat-card"><div class="num" id="onlineUsers">0</div><div class="label">Сейчас на сайте</div></div>
@@ -182,38 +170,26 @@
             <div class="stat-card"><div class="num" id="totalChats">0</div><div class="label">Чатов</div></div>
         </div>
 
-        <!-- ===== ВКЛАДКИ ===== -->
         <div class="tabs">
             <button class="active" onclick="switchTab('reviews')">💬 Отзывы</button>
             <button onclick="switchTab('chats')">🆘 Чаты поддержки</button>
             <button onclick="switchTab('visitors')">👥 Посетители</button>
-            <button onclick="switchTab('vomit')">🤮 Блевотный режим</button>
             <button onclick="switchTab('tools')">🛠️ Инструменты</button>
         </div>
 
-        <!-- ===== ВКЛАДКА: ОТЗЫВЫ ===== -->
         <div class="tab-content active" id="tabReviews">
-            <div class="card">
-                <h3>📋 Все отзывы</h3>
-                <div id="adminReviewsList"></div>
-            </div>
+            <div class="card"><h3>📋 Все отзывы</h3><div id="adminReviewsList"></div></div>
         </div>
 
-        <!-- ===== ВКЛАДКА: ЧАТЫ ===== -->
         <div class="tab-content" id="tabChats">
             <div class="admin-layout">
-                <div class="chat-list" id="chatList">
-                    <h3>💬 Чаты</h3>
-                    <div id="chatItems"></div>
-                </div>
+                <div class="chat-list" id="chatList"><h3>💬 Чаты</h3><div id="chatItems"></div></div>
                 <div class="chat-window" id="chatWindow">
                     <div class="chat-header">
                         <div class="name" id="chatUserName">Выберите чат</div>
                         <div class="ip" id="chatUserIP">—</div>
                     </div>
-                    <div class="chat-messages" id="chatMessages">
-                        <div style="text-align:center; color:#555577; padding:40px 0;">Выберите чат слева</div>
-                    </div>
+                    <div class="chat-messages" id="chatMessages"><div style="text-align:center; color:#555577; padding:40px 0;">Выберите чат слева</div></div>
                     <div class="chat-input">
                         <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
                         <button onclick="sendAdminMessage()">📩 Отправить</button>
@@ -222,60 +198,28 @@
             </div>
         </div>
 
-        <!-- ===== ВКЛАДКА: ПОСЕТИТЕЛИ (С УПРАВЛЕНИЕМ БЛЕВОТОЙ) ===== -->
         <div class="tab-content" id="tabVisitors">
             <div class="card">
                 <h3>👥 Список посетителей</h3>
                 <p style="color:#8888aa; font-size:13px; margin-bottom:10px;">
-                    Нажмите <strong>🤮 Включить блевоту</strong> для конкретного пользователя.
+                    Нажмите <strong>🤮</strong> чтобы включить блевоту для конкретного пользователя.
                 </p>
                 <div id="visitorsList"></div>
-            </div>
-        </div>
-
-        <!-- ===== ВКЛАДКА: БЛЕВОТНЫЙ РЕЖИМ ===== -->
-        <div class="tab-content" id="tabVomit">
-            <div class="card">
-                <h3>🤮 Блевотный режим</h3>
-                <p style="color:#8888aa; font-size:14px; margin-bottom:15px;">
-                    Управление блевотным режимом для всех или отдельных пользователей.
-                </p>
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
-                    <button class="btn-vomit" onclick="activateVomitForAll()">🤮 ВКЛЮЧИТЬ ДЛЯ ВСЕХ</button>
-                    <button class="btn-vomit-stop" onclick="deactivateVomitForAll()">✅ ОТКЛЮЧИТЬ ДЛЯ ВСЕХ</button>
-                </div>
-                <div style="padding:10px; background:rgba(0,0,0,0.3); border-radius:8px;">
-                    <strong style="color:#aaaacc;">Список пользователей с блевотой:</strong>
-                    <div id="vomitUsersList" style="margin-top:8px; color:#8888aa; font-size:13px;"></div>
+                <div style="margin-top:15px; padding:10px; background:rgba(0,0,0,0.3); border-radius:8px;">
+                    <strong style="color:#aaaacc;">Пользователи с блевотой:</strong>
+                    <div id="vomitUsersList" style="margin-top:5px; color:#8888aa; font-size:13px;"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== ВКЛАДКА: ИНСТРУМЕНТЫ ===== -->
         <div class="tab-content" id="tabTools">
             <div class="card">
-                <h3>🛠️ Инструменты управления</h3>
+                <h3>🛠️ Инструменты</h3>
                 <div class="tool-grid">
-                    <div class="tool-card">
-                        <h4>🗑️ Очистить отзывы</h4>
-                        <p>Удалить все отзывы навсегда.</p>
-                        <button class="btn-danger" onclick="clearReviews()">🗑️ Удалить</button>
-                    </div>
-                    <div class="tool-card">
-                        <h4>🗑️ Очистить чаты</h4>
-                        <p>Удалить все сообщения из поддержки.</p>
-                        <button class="btn-danger" onclick="clearChats()">🗑️ Удалить</button>
-                    </div>
-                    <div class="tool-card">
-                        <h4>🗑️ Очистить посетителей</h4>
-                        <p>Удалить все IP-адреса.</p>
-                        <button class="btn-danger" onclick="clearVisitors()">🗑️ Удалить</button>
-                    </div>
-                    <div class="tool-card" style="border-left-color:#ff4444;">
-                        <h4 style="color:#ff4444;">🔥 ПОЛНАЯ ОЧИСТКА</h4>
-                        <p>Удалить ВСЕ данные.</p>
-                        <button class="btn-danger" onclick="clearAllData()">🔥 Удалить всё</button>
-                    </div>
+                    <div class="tool-card"><h4>🗑️ Очистить отзывы</h4><p>Удалить все отзывы.</p><button class="btn-danger" onclick="clearReviews()">🗑️ Удалить</button></div>
+                    <div class="tool-card"><h4>🗑️ Очистить чаты</h4><p>Удалить все сообщения.</p><button class="btn-danger" onclick="clearChats()">🗑️ Удалить</button></div>
+                    <div class="tool-card"><h4>🗑️ Очистить посетителей</h4><p>Удалить все IP.</p><button class="btn-danger" onclick="clearVisitors()">🗑️ Удалить</button></div>
+                    <div class="tool-card" style="border-left-color:#ff4444;"><h4 style="color:#ff4444;">🔥 ПОЛНАЯ ОЧИСТКА</h4><p>Удалить ВСЕ.</p><button class="btn-danger" onclick="clearAllData()">🔥 Удалить всё</button></div>
                 </div>
             </div>
         </div>
@@ -299,7 +243,6 @@
         let editingReviewIndex = null;
         let vomitUsers = {};
 
-        // ===== ПРОВЕРКА ПАРОЛЯ =====
         if (!sessionStorage.getItem('adminLogged')) {
             const pass = prompt('🔐 Введите пароль администратора:');
             if (pass !== ADMIN_PASSWORD) {
@@ -310,7 +253,6 @@
             }
         }
 
-        // ===== ФУНКЦИИ JSONBIN =====
         async function loadData(binId) {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
@@ -318,10 +260,7 @@
                 });
                 const data = await res.json();
                 return data.record || [];
-            } catch (e) {
-                console.error('Ошибка загрузки:', e);
-                return [];
-            }
+            } catch { return []; }
         }
 
         async function saveData(binId, data) {
@@ -335,13 +274,9 @@
                     body: JSON.stringify(data)
                 });
                 return true;
-            } catch (e) {
-                console.error('Ошибка сохранения:', e);
-                return false;
-            }
+            } catch { return false; }
         }
 
-        // ===== ПОЛУЧЕНИЕ IP =====
         async function getIP() {
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
@@ -350,7 +285,6 @@
             } catch { return '0.0.0.0'; }
         }
 
-        // ===== РЕГИСТРАЦИЯ ПОСЕТИТЕЛЯ =====
         async function registerVisitor() {
             const ip = await getIP();
             const now = new Date().toLocaleString('ru-RU');
@@ -373,7 +307,6 @@
             await saveData(JSONBIN_BIN_VISITORS, visitors);
         }
 
-        // ===== ЗАГРУЗКА ДАННЫХ =====
         async function loadAdminData() {
             try {
                 visitors = await loadData(JSONBIN_BIN_VISITORS);
@@ -411,7 +344,6 @@
             }
         }
 
-        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
         function switchTab(tab) {
             document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -419,7 +351,6 @@
             document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
         }
 
-        // ===== ОТЗЫВЫ =====
         function renderReviews() {
             const container = document.getElementById('adminReviewsList');
             container.innerHTML = '';
@@ -495,7 +426,6 @@
             }
         }
 
-        // ===== ПОСЕТИТЕЛИ С БЛЕВОТОЙ =====
         function renderVisitorsWithVomit() {
             const container = document.getElementById('visitorsList');
             container.innerHTML = '';
@@ -517,8 +447,8 @@
                             ${vomitBadge}
                         </div>
                         <div>
-                            ${!hasVomit ? `<button class="btn-vomit" onclick="activateVomitForUser('${v.ip}')">🤮 Включить блевоту</button>` : ''}
-                            ${hasVomit ? `<button class="btn-vomit-stop" onclick="deactivateVomitForUser('${v.ip}')">✅ Отключить</button>` : ''}
+                            ${!hasVomit ? `<button class="btn-vomit" onclick="activateVomitForUser('${v.ip}')">🤮</button>` : ''}
+                            ${hasVomit ? `<button class="btn-vomit-stop" onclick="deactivateVomitForUser('${v.ip}')">✅</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -539,7 +469,6 @@
             ).join('');
         }
 
-        // ===== БЛЕВОТНЫЙ РЕЖИМ ДЛЯ ПОЛЬЗОВАТЕЛЯ =====
         async function activateVomitForUser(ip) {
             if (vomitUsers[ip]) {
                 showToast('🤮 У этого пользователя уже включена блевота');
@@ -564,35 +493,10 @@
             showToast(`✅ Блевотный режим выключен для ${ip}`);
         }
 
-        async function activateVomitForAll() {
-            if (!visitors || visitors.length === 0) {
-                showToast('❌ Нет посетителей');
-                return;
-            }
-            visitors.forEach(v => {
-                if (v.online) {
-                    vomitUsers[v.ip] = true;
-                }
-            });
-            await saveVomitUsers();
-            renderVisitorsWithVomit();
-            renderVomitUsersList();
-            showToast('🤮 Блевотный режим включен для всех онлайн-пользователей');
-        }
-
-        async function deactivateVomitForAll() {
-            vomitUsers = {};
-            await saveVomitUsers();
-            renderVisitorsWithVomit();
-            renderVomitUsersList();
-            showToast('✅ Блевотный режим выключен для всех');
-        }
-
         async function saveVomitUsers() {
             try {
                 let data = await loadData(JSONBIN_BIN_REVIEWS);
                 if (!Array.isArray(data)) data = [];
-                // Оставляем первый элемент (настройки) и добавляем всех пользователей с блевотой
                 const newData = [];
                 if (data.length > 0 && data[0].vomitMode !== undefined) {
                     newData.push(data[0]);
@@ -733,7 +637,6 @@
             input.value = '';
         }
 
-        // ===== ФУНКЦИИ ОЧИСТКИ =====
         async function clearReviews() {
             if (confirm('❌ Удалить все отзывы навсегда?')) {
                 await saveData(JSONBIN_BIN_REVIEWS, []);
@@ -807,7 +710,6 @@
             }
         }
 
-        // ===== ЗАПУСК =====
         registerVisitor();
         loadAdminData();
         setInterval(loadAdminData, 15000);
