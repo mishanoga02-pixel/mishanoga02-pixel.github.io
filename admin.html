@@ -31,7 +31,6 @@
         .card { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; margin: 10px 0; }
         .card h3 { color: #aaaacc; font-size: 16px; margin-bottom: 10px; }
 
-        /* ===== ОТЗЫВЫ ===== */
         .review-item { background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 2px solid #00d4ff; }
         .review-item .review-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px; }
         .review-item .review-header .stars { color: #ffd93d; }
@@ -48,10 +47,8 @@
         .btn-save:hover { background: #27ae60; }
         .btn-cancel { background: #555577; color: #fff; }
         .btn-cancel:hover { background: #444466; }
-
         .edit-input { width: 100%; padding: 8px; margin: 3px 0; background: rgba(0, 0, 0, 0.3); border: 1px solid #00d4ff; border-radius: 5px; color: #fff; font-size: 14px; }
 
-        /* ===== ЧАТЫ ===== */
         .admin-layout { display: grid; grid-template-columns: 280px 1fr; gap: 15px; margin: 10px 0; }
         .chat-list { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; max-height: 450px; overflow-y: auto; }
         .chat-list h3 { color: #aaaacc; font-size: 14px; margin-bottom: 10px; }
@@ -130,7 +127,7 @@
         <!-- ===== ВКЛАДКА: ОТЗЫВЫ ===== -->
         <div class="tab-content active" id="tabReviews">
             <div class="card">
-                <h3>📋 Все отзывы (можно редактировать)</h3>
+                <h3>📋 Все отзывы</h3>
                 <div id="adminReviewsList"></div>
             </div>
         </div>
@@ -140,7 +137,7 @@
             <div class="admin-layout">
                 <div class="chat-list" id="chatList">
                     <h3>💬 Чаты</h3>
-                    <div id="chatItems"><div class="chat-empty">Нет чатов</div></div>
+                    <div id="chatItems"></div>
                 </div>
                 <div class="chat-window" id="chatWindow">
                     <div class="chat-header">
@@ -161,7 +158,7 @@
         <!-- ===== ВКЛАДКА: ПОСЕТИТЕЛИ ===== -->
         <div class="tab-content" id="tabVisitors">
             <div class="card">
-                <h3>👥 Список посетителей с IP</h3>
+                <h3>👥 Список посетителей</h3>
                 <div id="visitorsList"></div>
             </div>
         </div>
@@ -171,11 +168,11 @@
     </div>
 
     <script>
-        // ===== КОНФИГ =====
+        // ===== КОНФИГ (API КЛЮЧ И BIN ID) =====
         const JSONBIN_BIN_REVIEWS = '6a63abecf5f4af5e29bcacb8';
         const JSONBIN_BIN_CHATS = '6a63abdaf5f4af5e29bcac6d';
         const JSONBIN_BIN_VISITORS = '6a63abecf5f4af5e29bcacb8';
-        const JSONBIN_API_KEY = '$2a$10$ТВОЙ_КЛЮЧ'; // ЗАМЕНИ
+        const JSONBIN_API_KEY = '$2a$10$tbxy2ZMT9aO8lzbmmC9InuV4d/nYn6eefTzBVNSshnDzUVPP5mz5O';
 
         const ADMIN_PASSWORD = '5056789';
         let currentChatId = null;
@@ -203,7 +200,10 @@
                 });
                 const data = await res.json();
                 return data.record || [];
-            } catch { return []; }
+            } catch (e) {
+                console.error('Ошибка загрузки:', e);
+                return [];
+            }
         }
 
         async function saveData(binId, data) {
@@ -217,7 +217,10 @@
                     body: JSON.stringify(data)
                 });
                 return true;
-            } catch { return false; }
+            } catch (e) {
+                console.error('Ошибка сохранения:', e);
+                return false;
+            }
         }
 
         // ===== ПОЛУЧЕНИЕ IP =====
@@ -254,22 +257,30 @@
 
         // ===== ЗАГРУЗКА ДАННЫХ =====
         async function loadAdminData() {
-            visitors = await loadData(JSONBIN_BIN_VISITORS);
-            reviews = await loadData(JSONBIN_BIN_REVIEWS);
-            allChats = await loadData(JSONBIN_BIN_CHATS);
+            try {
+                visitors = await loadData(JSONBIN_BIN_VISITORS);
+                reviews = await loadData(JSONBIN_BIN_REVIEWS);
+                allChats = await loadData(JSONBIN_BIN_CHATS);
 
-            const total = visitors.length;
-            const online = visitors.filter(v => v.online === true).length;
+                if (!Array.isArray(visitors)) visitors = [];
+                if (!Array.isArray(reviews)) reviews = [];
+                if (!Array.isArray(allChats)) allChats = [];
 
-            document.getElementById('totalUsers').textContent = total;
-            document.getElementById('onlineUsers').textContent = online;
-            document.getElementById('totalReviews').textContent = reviews.length;
-            document.getElementById('totalChats').textContent = allChats.length;
+                const total = visitors.length;
+                const online = visitors.filter(v => v.online === true).length;
 
-            renderReviews();
-            renderChatList(allChats);
-            renderVisitors();
-            if (currentChatId) renderChatMessages(currentChatId, allChats);
+                document.getElementById('totalUsers').textContent = total;
+                document.getElementById('onlineUsers').textContent = online;
+                document.getElementById('totalReviews').textContent = reviews.length;
+                document.getElementById('totalChats').textContent = allChats.length;
+
+                renderReviews();
+                renderChatList(allChats);
+                renderVisitors();
+                if (currentChatId) renderChatMessages(currentChatId, allChats);
+            } catch (e) {
+                console.error('Ошибка загрузки данных:', e);
+            }
         }
 
         // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
@@ -280,16 +291,14 @@
             document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
         }
 
-        // ===== ОТЗЫВЫ (С РЕДАКТИРОВАНИЕМ) =====
+        // ===== ОТЗЫВЫ =====
         function renderReviews() {
             const container = document.getElementById('adminReviewsList');
             container.innerHTML = '';
-
             if (!reviews || reviews.length === 0) {
                 container.innerHTML = '<p style="color:#555577;">Нет отзывов</p>';
                 return;
             }
-
             reviews.forEach((r, i) => {
                 const stars = '⭐'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
                 const ip = r.ip || 'IP неизвестен';
@@ -299,7 +308,7 @@
                     container.innerHTML += `
                         <div class="review-item" style="border-left-color: #f39c12;">
                             <div class="review-header">
-                                <div class="stars">⭐ Выберите рейтинг:
+                                <div class="stars">⭐ Рейтинг:
                                     <select id="editRating_${i}" class="edit-input" style="width:auto; display:inline-block; padding:4px;">
                                         ${[1,2,3,4,5].map(n => `<option value="${n}" ${n===r.rating?'selected':''}>${n}</option>`).join('')}
                                     </select>
@@ -307,7 +316,7 @@
                                 <span class="ip">🔹 ${ip}</span>
                             </div>
                             <input id="editName_${i}" class="edit-input" value="${r.name || 'Аноним'}" placeholder="Имя">
-                            <textarea id="editText_${i}" class="edit-input" rows="2" placeholder="Текст отзыва">${r.text || ''}</textarea>
+                            <textarea id="editText_${i}" class="edit-input" rows="2">${r.text || ''}</textarea>
                             <div class="review-actions">
                                 <button class="btn-save" onclick="saveReview(${i})">💾 Сохранить</button>
                                 <button class="btn-cancel" onclick="cancelEdit()">❌ Отмена</button>
@@ -333,25 +342,16 @@
             });
         }
 
-        function startEdit(index) {
-            editingReviewIndex = index;
-            renderReviews();
-        }
-
-        function cancelEdit() {
-            editingReviewIndex = null;
-            renderReviews();
-        }
+        function startEdit(index) { editingReviewIndex = index; renderReviews(); }
+        function cancelEdit() { editingReviewIndex = null; renderReviews(); }
 
         async function saveReview(index) {
             const rating = parseInt(document.getElementById(`editRating_${index}`).value);
             const name = document.getElementById(`editName_${index}`).value.trim() || 'Аноним';
             const text = document.getElementById(`editText_${index}`).value.trim() || 'Без текста';
-
             reviews[index].rating = rating;
             reviews[index].name = name;
             reviews[index].text = text;
-
             await saveData(JSONBIN_BIN_REVIEWS, reviews);
             editingReviewIndex = null;
             loadAdminData();
@@ -371,32 +371,26 @@
         function renderVisitors() {
             const container = document.getElementById('visitorsList');
             container.innerHTML = '';
-
             if (!visitors || visitors.length === 0) {
                 container.innerHTML = '<p style="color:#555577;">Нет посетителей</p>';
                 return;
             }
-
             let html = `<table style="width:100%; border-collapse:collapse; font-size:13px;">
                 <thead><tr>
-                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">IP-адрес</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">IP</th>
                     <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Статус</th>
-                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Первый визит</th>
                     <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Последний визит</th>
                 </tr></thead><tbody>`;
-
             visitors.forEach(v => {
                 const status = v.online ? '<span style="color:#2ecc71;">🟢 Онлайн</span>' : '<span style="color:#ff4444;">🔴 Офлайн</span>';
                 html += `
                     <tr>
                         <td style="padding:8px; font-family:monospace; color:#00d4ff;">${v.ip}</td>
                         <td style="padding:8px;">${status}</td>
-                        <td style="padding:8px; color:#8888aa;">${v.firstSeen || '—'}</td>
                         <td style="padding:8px; color:#8888aa;">${v.lastSeen || '—'}</td>
                     </tr>
                 `;
             });
-
             html += '</tbody></table>';
             container.innerHTML = html;
         }
@@ -405,18 +399,15 @@
         function renderChatList(chats) {
             const container = document.getElementById('chatItems');
             container.innerHTML = '';
-
             if (!chats || chats.length === 0) {
                 container.innerHTML = '<div class="chat-empty">Нет чатов</div>';
                 return;
             }
-
             const sorted = [...chats].sort((a, b) => {
                 const lastA = a.messages && a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].time) : 0;
                 const lastB = b.messages && b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].time) : 0;
                 return lastB - lastA;
             });
-
             sorted.forEach(chat => {
                 const lastMsg = chat.messages && chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
                 const lastText = lastMsg ? lastMsg.text.substring(0, 30) + (lastMsg.text.length > 30 ? '...' : '') : 'Нет сообщений';
@@ -424,7 +415,6 @@
                 const unread = chat.unread || 0;
                 const isActive = chat.id === currentChatId;
                 const unreadHtml = unread > 0 ? `<span class="unread">${unread}</span>` : '';
-
                 container.innerHTML += `
                     <div class="chat-item ${isActive ? 'active' : ''}" onclick="selectChat('${chat.id}')">
                         <div>
@@ -442,10 +432,7 @@
         function selectChat(chatId) {
             currentChatId = chatId;
             const chat = allChats.find(c => c.id === chatId);
-            if (chat) {
-                chat.unread = 0;
-                saveData(JSONBIN_BIN_CHATS, allChats);
-            }
+            if (chat) { chat.unread = 0; saveData(JSONBIN_BIN_CHATS, allChats); }
             renderChatList(allChats);
             renderChatMessages(chatId, allChats);
         }
@@ -454,7 +441,6 @@
             const container = document.getElementById('chatMessages');
             const headerName = document.getElementById('chatUserName');
             const headerIP = document.getElementById('chatUserIP');
-
             const chat = chats.find(c => c.id === chatId);
             if (!chat) {
                 container.innerHTML = '<div style="text-align:center; color:#555577; padding:40px 0;">Чат не найден</div>';
@@ -462,16 +448,13 @@
                 headerIP.textContent = '—';
                 return;
             }
-
             headerName.textContent = chat.name || 'Аноним';
             headerIP.textContent = 'IP: ' + (chat.ip || '—');
-
             container.innerHTML = '';
             if (!chat.messages || chat.messages.length === 0) {
                 container.innerHTML = '<div style="text-align:center; color:#555577; padding:40px 0;">Нет сообщений</div>';
                 return;
             }
-
             chat.messages.forEach((msg, index) => {
                 const cls = msg.isAdmin ? 'admin' : 'user';
                 const name = msg.isAdmin ? '🔹 Team X' : '👤 ' + (chat.name || 'Аноним');
@@ -480,26 +463,20 @@
                         <div class="text">${msg.text.replace(/</g, '&lt;')}</div>
                         <div class="time">${msg.time} · ${name}</div>
                         <div class="msg-actions">
-                            ${!msg.isAdmin ? `
-                                <button class="edit-msg-btn" onclick="editUserMessage(${index})">✏️</button>
-                            ` : ''}
+                            ${!msg.isAdmin ? `<button class="edit-msg-btn" onclick="editUserMessage(${index})">✏️</button>` : ''}
                             <button class="del-msg-btn" onclick="deleteMessage(${index})">🗑️</button>
                         </div>
                     </div>
                 `;
             });
-
             container.scrollTop = container.scrollHeight;
         }
 
-        // ===== РЕДАКТИРОВАНИЕ СООБЩЕНИЯ ПОЛЬЗОВАТЕЛЯ =====
         function editUserMessage(index) {
             const chat = allChats.find(c => c.id === currentChatId);
             if (!chat) return;
-
             const msg = chat.messages[index];
             if (!msg || msg.isAdmin) return;
-
             const newText = prompt('✏️ Редактировать сообщение пользователя:', msg.text);
             if (newText !== null && newText.trim() !== '') {
                 msg.text = newText.trim();
@@ -509,20 +486,16 @@
             }
         }
 
-        // ===== УДАЛЕНИЕ СООБЩЕНИЯ =====
         function deleteMessage(index) {
             if (!confirm('Удалить это сообщение?')) return;
-
             const chat = allChats.find(c => c.id === currentChatId);
             if (!chat) return;
-
             chat.messages.splice(index, 1);
             saveData(JSONBIN_BIN_CHATS, allChats);
             renderChatMessages(currentChatId, allChats);
             showToast('🗑️ Сообщение удалено');
         }
 
-        // ===== ОТПРАВКА СООБЩЕНИЯ ОТ АДМИНА =====
         async function sendAdminMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
@@ -530,23 +503,18 @@
                 if (!currentChatId) alert('Выберите чат');
                 return;
             }
-
             const now = new Date();
             const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
             const chat = allChats.find(c => c.id === currentChatId);
             if (!chat) return;
-
             if (!chat.messages) chat.messages = [];
             chat.messages.push({ text, isAdmin: true, time });
-
             await saveData(JSONBIN_BIN_CHATS, allChats);
             renderChatMessages(currentChatId, allChats);
             renderChatList(allChats);
             input.value = '';
         }
 
-        // ===== ТОСТ-УВЕДОМЛЕНИЕ =====
         function showToast(msg) {
             const toast = document.createElement('div');
             toast.textContent = msg;
@@ -561,7 +529,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // ===== ВЫХОД =====
         function logout() {
             if (confirm('Выйти из админ-панели?')) {
                 sessionStorage.removeItem('adminLogged');
