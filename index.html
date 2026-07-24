@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team X - Читы для игр</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0a12;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header { text-align: center; padding: 30px 0 20px; animation: fadeDown 0.8s ease; }
+        @keyframes fadeDown { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
+        .logo { font-size: 70px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        h1 {
+            font-size: 44px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { font-size: 18px; color: #8888aa; margin-top: 5px; }
+        .online-badge {
+            display: inline-block;
+            background: #2ecc71;
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 16px;
+            border-radius: 20px;
+            margin-top: 8px;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .counter-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            animation: fadeUp 0.8s ease 0.2s both;
+        }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .counter-box {
+            text-align: center;
+            padding: 18px;
+            background: rgba(20, 20, 37, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            transition: 0.3s;
+        }
+        .counter-box:hover { border-color: #00d4ff; transform: translateY(-2px); }
+        .counter-box .number { font-size: 36px; font-weight: 900; color: #00d4ff; }
+        .counter-box .label { font-size: 13px; color: #8888aa; margin-top: 3px; }
+        .counter-box .live { font-size: 10px; color: #2ecc71; }
+
+        .game-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            animation: fadeUp 0.8s ease 0.4s both;
+        }
+        .game-btn {
+            padding: 18px 12px;
+            border: 2px solid rgba(30, 30, 58, 0.6);
+            border-radius: 15px;
+            background: rgba(10, 10, 26, 0.7);
+            backdrop-filter: blur(5px);
+            color: #8888aa;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+        }
+        .game-btn .icon { font-size: 36px; display: block; margin-bottom: 8px; }
+        .game-btn:hover { border-color: #00d4ff; color: #fff; transform: translateY(-3px); box-shadow: 0 0 30px rgba(0, 212, 255, 0.05); }
+        .game-btn.active { border-color: #00d4ff; background: rgba(0, 212, 255, 0.1); color: #00d4ff; box-shadow: 0 0 30px rgba(0, 212, 255, 0.1); }
+        .game-btn .badge { display: inline-block; font-size: 10px; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
+        .badge-green { background: #2ecc71; color: #fff; }
+        .badge-soon { background: #f39c12; color: #fff; }
+
+        .cheat-card {
+            background: rgba(20, 20, 37, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            padding: 30px;
+            margin: 20px 0;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+        .cheat-card.active { display: block; }
+        .cheat-card .title { font-size: 30px; font-weight: 700; margin-bottom: 10px; }
+        .cheat-card .title span { color: #00d4ff; }
+        .cheat-card .desc { color: #8888aa; font-size: 16px; margin-bottom: 20px; }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .screenshot-box {
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 12px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            font-size: 40px;
+            transition: 0.3s;
+            cursor: default;
+        }
+        .screenshot-box:hover { border-color: #00d4ff; transform: scale(1.03); box-shadow: 0 0 30px rgba(0, 212, 255, 0.05); }
+        .screenshot-box .label { font-size: 13px; color: #aaaacc; margin-top: 6px; }
+        .screenshot-box .sub { font-size: 10px; color: #555577; }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .features-list li {
+            list-style: none;
+            padding: 12px 18px;
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 8px;
+            color: #aaaacc;
+            font-size: 15px;
+            border-left: 2px solid #00d4ff;
+            transition: 0.3s;
+        }
+        .features-list li:hover { background: rgba(20, 20, 37, 0.7); border-left-color: #7b2ffc; }
+        .features-list li .check { color: #2ecc71; margin-right: 10px; }
+
+        .download-section {
+            margin: 25px 0;
+            padding: 25px;
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            text-align: center;
+            transition: 0.3s;
+        }
+        .download-section:hover { border-color: #00d4ff; }
+        .btn-download {
+            padding: 16px 60px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc, #00d4ff);
+            background-size: 200% 200%;
+            border-radius: 52px;
+            z-index: -1;
+            animation: borderGlow 3s ease infinite;
+        }
+        @keyframes borderGlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .btn-download:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 212, 255, 0.3); }
+        .btn-download:active { transform: scale(0.95); }
+
+        .soon-card { text-align: center; padding: 50px 20px; color: #f39c12; }
+        .soon-card .big-icon { font-size: 70px; margin-bottom: 15px; animation: pulse 2s infinite; }
+        .soon-card .title { font-size: 26px; font-weight: 700; }
+        .soon-card .desc { color: #8888aa; font-size: 15px; margin-top: 8px; }
+
+        .reviews-section { margin: 30px 0; }
+        .reviews-section h3 { font-size: 22px; margin-bottom: 15px; }
+
+        .review-item {
+            background: rgba(10, 10, 26, 0.5);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 2px solid #00d4ff;
+            transition: 0.3s;
+        }
+        .review-item:hover { border-left-color: #7b2ffc; background: rgba(20, 20, 37, 0.5); }
+        .review-item .text { font-size: 15px; color: #ccccee; }
+        .review-item .author { font-size: 13px; color: #8888aa; margin-top: 5px; }
+        .review-item .stars { color: #ffd93d; font-size: 14px; }
+
+        .review-form {
+            background: rgba(10, 10, 26, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            margin: 15px 0;
+        }
+        .review-form input, .review-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .review-form input:focus, .review-form textarea:focus { border-color: #00d4ff; }
+        .review-form textarea { resize: vertical; min-height: 80px; }
+        .review-form .btn-submit {
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .review-form .btn-submit:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
+        .rating-select { display: flex; gap: 10px; margin-bottom: 10px; }
+        .rating-select label { cursor: pointer; font-size: 24px; transition: 0.2s; }
+        .rating-select label:hover, .rating-select label.active { color: #ffd93d; transform: scale(1.2); }
+
+        .support-section { margin: 30px 0; }
+        .support-section h3 { font-size: 22px; margin-bottom: 15px; }
+        .support-box {
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .support-box .message { padding: 10px 15px; margin-bottom: 8px; border-radius: 10px; max-width: 80%; animation: slideIn 0.3s ease; }
+        .support-box .message.user { background: rgba(0, 212, 255, 0.15); border: 1px solid rgba(0, 212, 255, 0.3); margin-left: auto; text-align: right; }
+        .support-box .message.support { background: rgba(123, 47, 252, 0.15); border: 1px solid rgba(123, 47, 252, 0.3); margin-right: auto; }
+        .support-box .message .name { font-size: 12px; color: #8888aa; margin-bottom: 3px; }
+        .support-box .message .text { font-size: 14px; color: #ddd; }
+        .support-box .message .time { font-size: 10px; color: #555577; margin-top: 3px; }
+        .support-box .message .status {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 3px;
+        }
+        .status-sent { background: #2ecc71; color: #fff; }
+        .status-read { background: #3498db; color: #fff; }
+        .status-typing { background: #f39c12; color: #fff; animation: blink 1s infinite; }
+
+        .support-input { display: flex; gap: 10px; margin-top: 10px; }
+        .support-input input { flex: 1; padding: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 14px; outline: none; }
+        .support-input input:focus { border-color: #00d4ff; }
+        .support-input button { padding: 12px 30px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .support-input button:hover { transform: scale(1.05); }
+
+        .recent-downloads {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(30, 30, 58, 0.5);
+        }
+        .recent-downloads h4 { font-size: 16px; color: #8888aa; margin-bottom: 10px; }
+        .recent-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(26, 26, 46, 0.5);
+            font-size: 13px;
+            color: #aaaacc;
+            animation: slideIn 0.5s ease;
+        }
+        .recent-item:last-child { border-bottom: none; }
+        .recent-item .time { color: #555577; font-size: 11px; }
+
+        @keyframes slideIn { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20, 20, 37, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid #00d4ff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.5s;
+            z-index: 999;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        .easter-egg {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(10, 10, 18, 0.5);
+            border: 2px dashed rgba(51, 51, 85, 0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            user-select: none;
+        }
+        .easter-egg:hover { border-color: #ff6b6b; }
+        .easter-egg .hidden-text { display: none; font-size: 20px; color: #ff6b6b; margin-top: 10px; }
+        .easter-egg.active .hidden-text { display: block; }
+        .easter-egg .number { font-size: 36px; font-weight: 900; color: #333355; }
+        .easter-egg.active .number { color: #ff6b6b; animation: shake 0.3s infinite; }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+
+        .warning {
+            background: rgba(26, 10, 10, 0.7);
+            border: 1px solid #ff4444;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ff8888;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #444466;
+            font-size: 12px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(20, 20, 37, 0.5);
+            margin-top: 20px;
+        }
+
+        /* ===== АДМИН-ПАНЕЛЬ ===== */
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 20, 37, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #8888aa;
+            z-index: 999;
+        }
+        .admin-btn:hover { border-color: #00d4ff; color: #00d4ff; transform: scale(1.1); }
+
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-modal.show { display: flex; }
+
+        .admin-window {
+            background: rgba(20, 20, 37, 0.95);
+            border: 1px solid #00d4ff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: fadeUp 0.3s ease;
+        }
+        .admin-window h2 {
+            text-align: center;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .admin-window .admin-close {
+            float: right;
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .admin-window input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .admin-window input:focus { border-color: #00d4ff; }
+        .admin-window .btn-admin {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .admin-window .btn-admin:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .admin-stats .stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .admin-stats .stat .num { font-size: 24px; font-weight: 700; color: #00d4ff; }
+        .admin-stats .stat .label { font-size: 11px; color: #8888aa; }
+
+        .admin-reviews {
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .admin-reviews .review-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .admin-reviews .review-item .del-btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 2px 10px;
+            cursor: pointer;
+            font-size: 11px;
+            float: right;
+        }
+
+        .admin-error {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ===== АДМИН-ПОДДЕРЖКА ===== */
+        .admin-support-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .admin-support-box .msg {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .admin-support-box .msg.user {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 2px solid #00d4ff;
+        }
+        .admin-support-box .msg.admin {
+            background: rgba(123, 47, 252, 0.1);
+            border-left: 2px solid #7b2ffc;
+        }
+        .admin-support-box .msg .meta {
+            font-size: 10px;
+            color: #666688;
+            margin-top: 3px;
+        }
+        .admin-support-box .msg .status {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+        .admin-support-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .admin-support-input input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .admin-support-input input:focus { border-color: #00d4ff; }
+        .admin-support-input button {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .admin-support-input button:hover { transform: scale(1.05); }
+
+        .admin-tabs {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .admin-tabs button {
+            flex: 1;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 8px;
+            color: #8888aa;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 13px;
+        }
+        .admin-tabs button:hover { border-color: #00d4ff; color: #fff; }
+        .admin-tabs button.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+        .admin-tab-content { display: none; }
+        .admin-tab-content.active { display: block; }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        .status-badge.sent { background: #2ecc71; color: #fff; }
+        .status-badge.read { background: #3498db; color: #fff; }
+        .status-badge.typing { background: #f39c12; color: #fff; animation: blink 1s infinite; }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 992px) {
+            .game-selector { grid-template-columns: repeat(3, 1fr); }
+            .counter-section { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .game-selector { grid-template-columns: 1fr 1fr; }
+            .counter-section { grid-template-columns: 1fr; }
+            .screenshots-grid { grid-template-columns: 1fr 1fr; }
+            .features-list { grid-template-columns: 1fr; }
+            h1 { font-size: 32px; }
+        }
+        @media (max-width: 480px) {
+            .game-selector { grid-template-columns: 1fr; }
+            .screenshots-grid { grid-template-columns: 1fr; }
+            .support-input { flex-direction: column; }
+            .admin-stats { grid-template-columns: 1fr; }
+            .admin-support-input { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ФОН ===== -->
+    <canvas id="stars-canvas"></canvas>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="logo">🧠</div>
+            <h1>TEAM X CHEATS</h1>
+            <p class="subtitle">Лучший софт для игр · Новые обновления</p>
+            <span class="online-badge">🟢 127 онлайн</span>
+        </div>
+
+        <!-- ===== СЧЁТЧИКИ ===== -->
+        <div class="counter-section">
+            <div class="counter-box">
+                <div class="number" id="downloadCounter">100</div>
+                <div class="label">Всего скачиваний</div>
+                <div class="live">⬆ +2 за минуту</div>
+            </div>
+            <div class="counter-box">
+                <div class="number" id="onlineCounter">127</div>
+                <div class="label">Сейчас онлайн</div>
+                <div class="live" style="color:#2ecc71;">🟢 активно</div>
+            </div>
+            <div class="counter-box">
+                <div class="number">4.9⭐</div>
+                <div class="label">Средняя оценка</div>
+                <div class="live">🔥 256 отзывов</div>
+            </div>
+        </div>
+
+        <!-- ===== МЕНЮ ===== -->
+        <div class="game-selector">
+            <button class="game-btn active" data-game="standoff2">
+                <span class="icon">🔫</span>
+                Standoff 2
+                <span class="badge badge-green">Доступно</span>
+            </button>
+            <button class="game-btn" data-game="rust">
+                <span class="icon">🦀</span>
+                Rust (Пиратка)
+                <span class="badge badge-soon">Скоро</span>
+            </button>
+            <button class="game-btn" data-game="rust_orig">
+                <span class="icon">🦀</span>
+                Rust (Ориг)
+                <span class="badge badge-soon">Скоро</span>
+            </button>
+            <button class="game-btn" data-game="cs2">
+                <span class="icon">🎯</span>
+                CS 2
+                <span class="badge badge-soon">Скоро</span>
+            </button>
+            <button class="game-btn" data-game="spoofer">
+                <span class="icon">🛡️</span>
+                Спуфер
+                <span class="badge badge-soon">Скоро</span>
+            </button>
+        </div>
+
+        <!-- ===== STANDOFF 2 ===== -->
+        <div class="cheat-card active" id="standoff2">
+            <div class="title">🔫 Standoff 2 <span>Cheat v3.2</span></div>
+            <div class="desc">Новейший софт для профессиональной игры. Уже доступен!</div>
+
+            <div class="screenshots-grid">
+                <div class="screenshot-box">🎯 <div class="label">Aimbot</div><div class="sub">Прицел</div></div>
+                <div class="screenshot-box">👁️ <div class="label">ESP</div><div class="sub">Стены</div></div>
+                <div class="screenshot-box">🔫 <div class="label">No Recoil</div><div class="sub">Отдача</div></div>
+                <div class="screenshot-box">⚡ <div class="label">Speed Hack</div><div class="sub">Скорость</div></div>
+                <div class="screenshot-box">🔄 <div class="label">Bunny Hop</div><div class="sub">Прыжки</div></div>
+                <div class="screenshot-box">🛡️ <div class="label">Обход</div><div class="sub">Античит</div></div>
+            </div>
+
+            <ul class="features-list">
+                <li><span class="check">✅</span> Aimbot с настройкой FOV</li>
+                <li><span class="check">✅</span> ESP + здоровье + дистанция</li>
+                <li><span class="check">✅</span> No Recoil</li>
+                <li><span class="check">✅</span> Speed Hack до 200%</li>
+                <li><span class="check">✅</span> Bunny Hop + Trigger Bot</li>
+                <li><span class="check">✅</span> Обход античита</li>
+            </ul>
+
+            <div class="download-section">
+                <a href="https://t.me/STENDOFF_CHEAT456" target="_blank">
+                    <button class="btn-download">⬇️ СКАЧАТЬ ЧИТ</button>
+                </a>
+            </div>
+
+            <!-- ===== ОТЗЫВЫ ===== -->
+            <div class="reviews-section">
+                <h3>💬 Отзывы</h3>
+                <div id="reviewsList">
+                    <div class="review-item">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <div class="text">"Лучший чит для Standoff 2. Аимбот — просто бомба!"</div>
+                        <div class="author">Алексей · Киберспортсмен, топ-10 EU</div>
+                    </div>
+                    <div class="review-item">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <div class="text">"Пользуюсь 2 месяца, античит не палит. Рекомендую!"</div>
+                        <div class="author">Дмитрий · Команда CyberX</div>
+                    </div>
+                </div>
+
+                <div class="review-form">
+                    <h4 style="margin-bottom:10px; color:#aaaacc;">✍️ Оставить отзыв</h4>
+                    <input type="text" id="reviewName" placeholder="Ваше имя">
+                    <div class="rating-select" id="ratingSelect">
+                        <label data-rating="1">⭐</label>
+                        <label data-rating="2">⭐⭐</label>
+                        <label data-rating="3">⭐⭐⭐</label>
+                        <label data-rating="4">⭐⭐⭐⭐</label>
+                        <label data-rating="5" class="active">⭐⭐⭐⭐⭐</label>
+                    </div>
+                    <textarea id="reviewText" placeholder="Ваш отзыв..."></textarea>
+                    <button class="btn-submit" onclick="submitReview()">📤 Отправить отзыв</button>
+                </div>
+            </div>
+
+            <!-- ===== ПОДДЕРЖКА (ЧАТ) ===== -->
+            <div class="support-section">
+                <h3>🆘 Поддержка (чат)</h3>
+                <div class="support-box" id="supportBox">
+                    <!-- Сообщения будут добавляться сюда -->
+                </div>
+                <div class="support-input">
+                    <input type="text" id="supportInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
+                    <button onclick="sendSupportMessage()">📩 Отправить</button>
+                </div>
+            </div>
+
+            <div class="recent-downloads">
+                <h4>📥 Последние скачивания</h4>
+                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">только что</span></div>
+                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">2 минуты назад</span></div>
+                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">5 минут назад</span></div>
+                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">12 минут назад</span></div>
+            </div>
+
+            <div class="warning">
+                ⚠️ Отключи антивирус перед установкой!<br>
+                Поддержка: <a href="https://t.me/Byrmaldimvhamame" style="color:#ff6666;">@Byrmaldimvhamame</a>
+            </div>
+        </div>
+
+        <!-- ===== ОСТАЛЬНЫЕ ===== -->
+        <div class="cheat-card" id="rust">
+            <div class="soon-card">
+                <div class="big-icon">🦀</div>
+                <div class="title">Rust (Пиратка) — Скоро</div>
+                <div class="desc">Чит для пиратской версии Rust. Разрабатывается.<br>Ожидайте в ближайшее время.</div>
+            </div>
+        </div>
+        <div class="cheat-card" id="rust_orig">
+            <div class="soon-card">
+                <div class="big-icon">🦀</div>
+                <div class="title">Rust (Ориг) — Скоро</div>
+                <div class="desc">Чит для оригинальной версии Rust. Разрабатывается.<br>Ожидайте в ближайшее время.</div>
+            </div>
+        </div>
+        <div class="cheat-card" id="cs2">
+            <div class="soon-card">
+                <div class="big-icon">🎯</div>
+                <div class="title">CS 2 — Скоро</div>
+                <div class="desc">Чит для Counter-Strike 2. Готовится к релизу.<br>Скоро будет доступно.</div>
+            </div>
+        </div>
+        <div class="cheat-card" id="spoofer">
+            <div class="soon-card">
+                <div class="big-icon">🛡️</div>
+                <div class="title">Спуфер — Скоро</div>
+                <div class="desc">Спуфер для замены HWID и обхода блокировок.<br>Разрабатывается. Ожидайте.</div>
+            </div>
+        </div>
+
+        <!-- ===== ПАСХАЛКА ===== -->
+        <div class="easter-egg" id="easterEgg">
+            <div class="number">🔮 67</div>
+            <p style="color:#555577; font-size:12px;">Нажми на 67</p>
+            <div class="hidden-text">
+                🧠 ТЫ НАШЁЛ ПАСХАЛКУ!<br>
+                <span style="font-size:16px; color:#ffd93d;">🤡 67 — ЭТО МЕМ</span><br>
+                <span style="font-size:12px; color:#8888aa;">"67 — это не просто число, это стиль жизни"</span>
+            </div>
+        </div>
+
+        <!-- ===== ФУТЕР ===== -->
+        <div class="footer">
+            <p>© 2026 Team X · Все права защищены</p>
+            <p style="margin-top:5px; font-size:11px; color:#333355;">Не является официальным продуктом. Использование на свой страх и риск.</p>
+        </div>
+
+    </div>
+
+    <!-- ===== КНОПКА АДМИНА ===== -->
+    <button class="admin-btn" onclick="openAdmin()">🔐</button>
+
+    <!-- ===== АДМИН-ОКНО ===== -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-window">
+            <button class="admin-close" onclick="closeAdmin()">✕</button>
+            <h2>🔐 Админ-панель</h2>
+
+            <div id="adminLogin">
+                <input type="password" id="adminPassword" placeholder="Введите пароль..." onkeypress="if(event.key==='Enter') adminLogin()">
+                <button class="btn-admin" onclick="adminLogin()">Войти</button>
+                <div class="admin-error" id="adminError">❌ Неверный пароль!</div>
+            </div>
+
+            <div id="adminPanel" style="display:none;">
+                <div class="admin-tabs">
+                    <button class="active" onclick="switchTab('stats')">📊 Статистика</button>
+                    <button onclick="switchTab('reviews')">💬 Отзывы</button>
+                    <button onclick="switchTab('support')">🆘 Поддержка</button>
+                </div>
+
+                <!-- ===== СТАТИСТИКА ===== -->
+                <div class="admin-tab-content active" id="tabStats">
+                    <div class="admin-stats">
+                        <div class="stat"><div class="num" id="adminDownloads">100</div><div class="label">Скачиваний</div></div>
+                        <div class="stat"><div class="num" id="adminOnline">127</div><div class="label">Онлайн</div></div>
+                        <div class="stat"><div class="num" id="adminReviews">2</div><div class="label">Отзывов</div></div>
+                        <div class="stat"><div class="num" id="adminMessages">0</div><div class="label">Сообщений</div></div>
+                    </div>
+                </div>
+
+                <!-- ===== ОТЗЫВЫ ===== -->
+                <div class="admin-tab-content" id="tabReviews">
+                    <h3 style="color:#aaaacc; font-size:16px; margin:10px 0;">📋 Управление отзывами</h3>
+                    <div class="admin-reviews" id="adminReviewsList"></div>
+                    <button class="btn-admin" style="background:#ff4444;" onclick="clearAllReviews()">🗑️ Удалить все отзывы</button>
+                </div>
+
+                <!-- ===== ПОДДЕРЖКА (АДМИН) ===== -->
+                <div class="admin-tab-content" id="tabSupport">
+                    <h3 style="color:#aaaacc; font-size:16px; margin:10px 0;">🆘 Управление поддержкой</h3>
+                    <div class="admin-support-box" id="adminSupportBox">
+                        <!-- Сообщения из поддержки -->
+                    </div>
+                    <div class="admin-support-input">
+                        <input type="text" id="adminSupportInput" placeholder="Ответить пользователю..." onkeypress="if(event.key==='Enter') sendAdminSupport()">
+                        <button onclick="sendAdminSupport()">📩 Ответить</button>
+                    </div>
+                    <p style="font-size:11px; color:#555577; margin-top:8px;">Статусы: <span class="status-badge sent">Отправлено</span> <span class="status-badge read">Прочитано</span> <span class="status-badge typing">Печатает...</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== УВЕДОМЛЕНИЕ ===== -->
+    <div class="toast" id="toast">🔥 Кто-то только что скачал чит!</div>
+
+    <!-- ===== СКРИПТЫ ===== -->
+    <script>
+        // === ЗВЁЗДЫ ===
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const stars = [];
+        for (let i = 0; i < 300; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.8 + 0.5,
+                speed: Math.random() * 0.005 + 0.002,
+                angle: Math.random() * Math.PI * 2,
+                opacity: Math.random() * 0.8 + 0.2
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const grad = ctx.createRadialGradient(canvas.width * 0.7, canvas.height * 0.2, 0, canvas.width * 0.7, canvas.height * 0.2, canvas.width * 0.6);
+            grad.addColorStop(0, 'rgba(120, 40, 200, 0.06)');
+            grad.addColorStop(0.5, 'rgba(0, 100, 200, 0.04)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const grad2 = ctx.createRadialGradient(canvas.width * 0.2, canvas.height * 0.8, 0, canvas.width * 0.2, canvas.height * 0.8, canvas.width * 0.5);
+            grad2.addColorStop(0, 'rgba(200, 50, 100, 0.05)');
+            grad2.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad2;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.angle += star.speed;
+                star.x += Math.sin(star.angle) * 0.02;
+                star.y += Math.cos(star.angle) * 0.02;
+                if (star.x < 0) star.x = canvas.width;
+                if (star.x > canvas.width) star.x = 0;
+                if (star.y < 0) star.y = canvas.height;
+                if (star.y > canvas.height) star.y = 0;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+                if (Math.random() < 0.005) star.opacity = Math.random() * 0.8 + 0.2;
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // === СЧЁТЧИКИ ===
+        let count = 100;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3) + 1;
+            document.getElementById('downloadCounter').textContent = count;
+            if (document.getElementById('adminDownloads')) document.getElementById('adminDownloads').textContent = count;
+        }, 10000);
+
+        let online = 127;
+        setInterval(() => {
+            online += Math.floor(Math.random() * 3) - 1;
+            if (online < 100) online = 100;
+            if (online > 180) online = 180;
+            document.getElementById('onlineCounter').textContent = online;
+            if (document.getElementById('adminOnline')) document.getElementById('adminOnline').textContent = online;
+        }, 8000);
+
+        // === УВЕДОМЛЕНИЯ ===
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+        setInterval(showToast, 15000);
+
+        // === ПЕРЕКЛЮЧЕНИЕ ===
+        const gameBtns = document.querySelectorAll('.game-btn');
+        const cheatCards = {
+            standoff2: document.getElementById('standoff2'),
+            rust: document.getElementById('rust'),
+            rust_orig: document.getElementById('rust_orig'),
+            cs2: document.getElementById('cs2'),
+            spoofer: document.getElementById('spoofer')
+        };
+        gameBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                gameBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const game = this.dataset.game;
+                Object.keys(cheatCards).forEach(key => cheatCards[key].classList.remove('active'));
+                if (cheatCards[game]) cheatCards[game].classList.add('active');
+            });
+        });
+
+        // === СИСТЕМА ОТЗЫВОВ ===
+        let rating = 5;
+        document.querySelectorAll('#ratingSelect label').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('#ratingSelect label').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                rating = parseInt(this.dataset.rating);
+            });
+        });
+
+        let reviews = [
+            { name: 'Алексей', text: 'Лучший чит для Standoff 2. Аимбот — просто бомба!', rating: 5 },
+            { name: 'Дмитрий', text: 'Пользуюсь 2 месяца, античит не палит. Рекомендую!', rating: 5 }
+        ];
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsList');
+            container.innerHTML = '';
+            reviews.forEach(r => {
+                const stars = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                container.innerHTML += `
+                    <div class="review-item" style="animation: slideIn 0.3s ease;">
+                        <div class="stars">${stars}</div>
+                        <div class="text">"${r.text.replace(/</g, '&lt;')}"</div>
+                        <div class="author">${r.name} · ${r.date || 'только что'}</div>
+                    </div>
+                `;
+            });
+            if (document.getElementById('adminReviews')) document.getElementById('adminReviews').textContent = reviews.length;
+            renderAdminReviews();
+        }
+
+        function renderAdminReviews() {
+            const container = document.getElementById('adminReviewsList');
+            if (!container) return;
+            container.innerHTML = '';
+            reviews.forEach((r, i) => {
+                const stars = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                container.innerHTML += `
+                    <div class="review-item">
+                        <div>${stars} <strong>${r.name}</strong>: ${r.text.substring(0, 50)}${r.text.length > 50 ? '...' : ''}</div>
+                        <button class="del-btn" onclick="deleteReview(${i})">✕</button>
+                    </div>
+                `;
+            });
+        }
+
+        function submitReview() {
+            const name = document.getElementById('reviewName').value.trim() || 'Аноним';
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) { alert('❌ Напишите отзыв!'); return; }
+            reviews.unshift({ name, text, rating, date: 'только что' });
+            renderReviews();
+            document.getElementById('reviewText').value = '';
+            document.getElementById('reviewName').value = '';
+            showToastMessage('✅ Ваш отзыв опубликован!');
+        }
+
+        function deleteReview(index) {
+            if (confirm('Удалить этот отзыв?')) { reviews.splice(index, 1); renderReviews(); showToastMessage('🗑️ Отзыв удалён'); }
+        }
+
+        function clearAllReviews() {
+            if (confirm('Удалить все отзывы?')) { reviews = []; renderReviews(); showToastMessage('🗑️ Все отзывы удалены'); }
+        }
+
+        function showToastMessage(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.textContent = '🔥 Кто-то только что скачал чит!'; toast.classList.remove('show'); }, 4000);
+        }
+
+        renderReviews();
+
+        // === ПОДДЕРЖКА (ЧАТ) ===
+        let supportMessages = [];
+
+        function renderSupport() {
+            const box = document.getElementById('supportBox');
+            box.innerHTML = '';
+            supportMessages.forEach(msg => {
+                const statusMap = {
+                    'sent': '<span class="status status-sent">✓ Отправлено</span>',
+                    'read': '<span class="status status-read">✓ Прочитано</span>',
+                    'typing': '<span class="status status-typing">⋯ Печатает...</span>'
+                };
+                const statusHtml = msg.status ? statusMap[msg.status] || '' : '';
+                const cls = msg.isAdmin ? 'support' : 'user';
+                const name = msg.isAdmin ? '🔹 Team X Support' : '👤 Вы';
+                box.innerHTML += `
+                    <div class="message ${cls}" style="animation: slideIn 0.3s ease;">
+                        <div class="name">${name}</div>
+                        <div class="text">${msg.text.replace(/</g, '&lt;')}</div>
+                        <div class="time">${msg.time || 'только что'} ${statusHtml}</div>
+                    </div>
+                `;
+            });
+            box.scrollTop = box.scrollHeight;
+            if (document.getElementById('adminMessages')) document.getElementById('adminMessages').textContent = supportMessages.length;
+            renderAdminSupport();
+        }
+
+        function renderAdminSupport() {
+            const box = document.getElementById('adminSupportBox');
+            if (!box) return;
+            box.innerHTML = '';
+            supportMessages.forEach(msg => {
+                const cls = msg.isAdmin ? 'admin' : 'user';
+                const name = msg.isAdmin ? '🔹 Team X' : '👤 Пользователь';
+                const statusMap = {
+                    'sent': '<span class="status-badge sent">Отправлено</span>',
+                    'read': '<span class="status-badge read">Прочитано</span>',
+                    'typing': '<span class="status-badge typing">Печатает...</span>'
+                };
+                const statusHtml = msg.status ? statusMap[msg.status] || '' : '';
+                box.innerHTML += `
+                    <div class="msg ${cls}">
+                        <div><strong>${name}</strong> ${statusHtml}</div>
+                        <div>${msg.text.replace(/</g, '&lt;')}</div>
+                        <div class="meta">${msg.time || 'только что'}</div>
+                    </div>
+                `;
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendSupportMessage() {
+            const input = document.getElementById('supportInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            supportMessages.push({
+                text: text,
+                isAdmin: false,
+                time: time,
+                status: 'sent'
+            });
+            renderSupport();
+            input.value = '';
+
+            // Меняем статус на "прочитано" через 1 сек
+            setTimeout(() => {
+                if (supportMessages.length > 0) {
+                    supportMessages[supportMessages.length - 1].status = 'read';
+                    renderSupport();
+                }
+            }, 1000);
+
+            // Автоответ от поддержки
+            setTimeout(() => {
+                const now2 = new Date();
+                const time2 = now2.getHours().toString().padStart(2, '0') + ':' + now2.getMinutes().toString().padStart(2, '0');
+                const replies = [
+                    "Спасибо за сообщение! Мы ответим в ближайшее время.",
+                    "Отлично! Ваш вопрос передан специалисту.",
+                    "Здравствуйте! Чем мы можем вам помочь?",
+                    "Понял! Сейчас поможем решить проблему.",
+                    "Хорошо! Мы разбираем ваш запрос."
+                ];
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+
+                // Статус "печатает"
+                supportMessages.push({
+                    text: '...',
+                    isAdmin: true,
+                    time: time2,
+                    status: 'typing'
+                });
+                renderSupport();
+
+                setTimeout(() => {
+                    // Удаляем "печатает" и добавляем ответ
+                    supportMessages.pop();
+                    supportMessages.push({
+                        text: reply,
+                        isAdmin: true,
+                        time: time2,
+                        status: 'read'
+                    });
+                    renderSupport();
+                }, 1500 + Math.random() * 1000);
+            }, 2000 + Math.random() * 1000);
+        }
+
+        // === АДМИН-ПАНЕЛЬ ===
+        function openAdmin() {
+            document.getElementById('adminModal').classList.add('show');
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminError').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminPassword').focus();
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.remove('show');
+        }
+
+        function adminLogin() {
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === '5056789') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('adminError').style.display = 'none';
+                document.getElementById('adminDownloads').textContent = document.getElementById('downloadCounter').textContent;
+                document.getElementById('adminOnline').textContent = document.getElementById('onlineCounter').textContent;
+                document.getElementById('adminReviews').textContent = reviews.length;
+                document.getElementById('adminMessages').textContent = supportMessages.length;
+                renderAdminReviews();
+                renderAdminSupport();
+            } else {
+                document.getElementById('adminError').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.admin-tabs button[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+        }
+
+        // === АДМИН-ПОДДЕРЖКА (ОТВЕТЫ) ===
+        function sendAdminSupport() {
+            const input = document.getElementById('adminSupportInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            // Добавляем ответ от админа
+            supportMessages.push({
+                text: text,
+                isAdmin: true,
+                time: time,
+                status: 'read'
+            });
+            renderSupport();
+            renderAdminSupport();
+            input.value = '';
+
+            // Уведомление
+            showToastMessage('✅ Ответ отправлен пользователю!');
+        }
+
+        // === ПАСХАЛКА ===
+        document.getElementById('easterEgg').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        // === ЗАКРЫТИЕ ПО ESC ===
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAdmin();
+        });
+
+        document.getElementById('adminModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAdmin();
+        });
+
+        // === СТАРТОВЫЕ СООБЩЕНИЯ В ПОДДЕРЖКЕ ===
+        setTimeout(() => {
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            supportMessages.push({
+                text: 'Здравствуйте! Чем мы можем вам помочь?',
+                isAdmin: true,
+                time: time,
+                status: 'read'
+            });
+            renderSupport();
+        }, 500);
+    </script>
+
+</body>
+</html>
