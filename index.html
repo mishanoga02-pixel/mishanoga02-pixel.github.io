@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team X - Читы для игр</title>
     <style>
+        /* ===== ВЕСЬ СТАРЫЙ CSS (БЕЗ КНОПОК БЛЕВОТЫ) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #0a0a12; color: #fff; min-height: 100vh; overflow-x: hidden; }
         #stars-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
@@ -147,26 +148,53 @@
         .admin-modal-box .error { color: #ff4444; font-size: 13px; margin-top: 8px; display: none; }
         .admin-modal-box .close-btn { float: right; background: none; border: none; color: #ff4444; font-size: 22px; cursor: pointer; }
 
-        /* ===== ПАСХАЛКИ С МЕМАМИ ===== */
-        .meme-section { margin: 30px 0; text-align: center; }
-        .meme-section h3 { color: #8888aa; font-size: 16px; margin-bottom: 10px; }
-        .meme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .meme-card {
-            background: rgba(20, 20, 37, 0.85);
-            border: 1px solid rgba(30, 30, 58, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            transition: 0.3s;
-            cursor: pointer;
+        /* ===== БЛЕВОТНЫЙ РЕЖИМ (ТОЛЬКО СТИЛИ ДЛЯ САЙТА) ===== */
+        @keyframes vomitShake {
+            0% { transform: rotate(-2deg) scale(1.02); }
+            25% { transform: rotate(2deg) scale(0.98); }
+            50% { transform: rotate(-1deg) scale(1.01); }
+            75% { transform: rotate(1deg) scale(0.99); }
+            100% { transform: rotate(0deg) scale(1); }
         }
-        .meme-card:hover { border-color: #ff6b6b; transform: scale(1.02); }
-        .meme-card .emoji { font-size: 48px; }
-        .meme-card .name { font-size: 14px; color: #aaaacc; margin-top: 8px; }
-        .meme-card .desc { font-size: 11px; color: #555577; }
+        @keyframes vomitColor {
+            0% { color: #ff0000; background-color: #00ff00 !important; }
+            25% { color: #00ff00; background-color: #0000ff !important; }
+            50% { color: #0000ff; background-color: #ffff00 !important; }
+            75% { color: #ffff00; background-color: #ff00ff !important; }
+            100% { color: #ff00ff; background-color: #ff0000 !important; }
+        }
+        @keyframes vomitOverlay {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+            100% { opacity: 0.3; transform: scale(1); }
+        }
+        @keyframes vomitText {
+            0% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); color: #ff0000; }
+            50% { transform: translate(-50%, -50%) rotate(5deg) scale(0.9); color: #00ff00; }
+            100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); color: #ff00ff; }
+        }
+
+        .vomit-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 99999;
+            background: repeating-linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,255,0,0.1) 20px, rgba(0,0,255,0.1) 40px, rgba(255,255,0,0.1) 60px);
+            animation: vomitOverlay 0.1s infinite;
+        }
+        .vomit-text {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 99999; font-size: 48px; font-weight: 900; color: #ff0000;
+            text-shadow: 0 0 20px #ff0000, 0 0 40px #00ff00, 0 0 60px #0000ff;
+            animation: vomitText 0.1s infinite; pointer-events: none; text-align: center;
+        }
+        body.vomit-active * {
+            animation: vomitShake 0.05s infinite !important;
+            transition: none !important;
+        }
+        body.vomit-active .container {
+            transform: scale(1.02) rotate(-1deg) !important;
+        }
 
         @media (max-width: 768px) {
-            .meme-grid { grid-template-columns: 1fr 1fr; }
             .game-selector { grid-template-columns: 1fr 1fr; }
             .counter-section { grid-template-columns: 1fr; }
             .screenshots-grid { grid-template-columns: 1fr 1fr; }
@@ -174,7 +202,6 @@
             h1 { font-size: 32px; }
         }
         @media (max-width: 480px) {
-            .meme-grid { grid-template-columns: 1fr; }
             .game-selector { grid-template-columns: 1fr; }
             .screenshots-grid { grid-template-columns: 1fr; }
             .support-input { flex-direction: column; }
@@ -183,7 +210,7 @@
 </head>
 <body>
 
-    <!-- ===== ФОН (ЗВЁЗДЫ) ===== -->
+    <!-- ===== ФОН ===== -->
     <canvas id="stars-canvas"></canvas>
 
     <div class="container">
@@ -361,43 +388,6 @@
                 <div class="big-icon">🛡️</div>
                 <div class="title">Спуфер — Скоро</div>
                 <div class="desc">Спуфер для замены HWID и обхода блокировок.<br>Разрабатывается. Ожидайте.</div>
-            </div>
-        </div>
-
-        <!-- ===== ПАСХАЛКИ С МЕМАМИ ===== -->
-        <div class="meme-section">
-            <h3>🎭 Нажми на мем — получи порцию хаоса!</h3>
-            <div class="meme-grid">
-                <div class="meme-card" onclick="triggerMeme('rickroll')">
-                    <div class="emoji">🎵</div>
-                    <div class="name">Rick Astley</div>
-                    <div class="desc">"Never gonna give you up"</div>
-                </div>
-                <div class="meme-card" onclick="triggerMeme('thisisfine')">
-                    <div class="emoji">🔥</div>
-                    <div class="name">This Is Fine</div>
-                    <div class="desc">Всё горит, а я в порядке</div>
-                </div>
-                <div class="meme-card" onclick="triggerMeme('dogecoin')">
-                    <div class="emoji">🐕</div>
-                    <div class="name">Doge</div>
-                    <div class="desc">Such wow, very meme</div>
-                </div>
-                <div class="meme-card" onclick="triggerMeme('sus')">
-                    <div class="emoji">👀</div>
-                    <div class="name">SUS</div>
-                    <div class="desc">Ты подозреваемый!</div>
-                </div>
-                <div class="meme-card" onclick="triggerMeme('stonks')">
-                    <div class="emoji">📈</div>
-                    <div class="name">Stonks</div>
-                    <div class="desc">Только вверх!</div>
-                </div>
-                <div class="meme-card" onclick="triggerMeme('brain')">
-                    <div class="emoji">🧠</div>
-                    <div class="name">Big Brain</div>
-                    <div class="desc">Мозг взорван</div>
-                </div>
             </div>
         </div>
 
@@ -743,28 +733,47 @@
             }, 4000);
         }
 
-        // ===== ПАСХАЛКИ С МЕМАМИ =====
-        function triggerMeme(type) {
-            const messages = {
-                'rickroll': "🎵 Never gonna give you up! 🎵",
-                'thisisfine': "🔥 ВСЁ ГОРИТ! 🔥 Но я в порядке...",
-                'dogecoin': "🐕 Such wow! Very meme! Much doge!",
-                'sus': "👀 ТЫ ПОДОЗРЕВАЕМЫЙ! КАРТА ГОЛОСОВАНИЯ!",
-                'stonks': "📈 STONKS! ТОЛЬКО ВВЕРХ! 🚀",
-                'brain': "🧠 ТВОЙ МОЗГ ВЗОРВАН! 200 IQ!"
-            };
-            
-            const emojis = ['😂', '🤣', '😅', '🥲', '😜', '🤪', '😝', '😁', '😆'];
-            
-            // Показываем сообщение
-            showToastMessage(messages[type] || "🤡 МЕМ АКТИВИРОВАН!");
-            
-            // Дополнительный эффект
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-                    showToastMessage(randomEmoji + " " + messages[type]);
-                }, i * 600);
+        // ===== БЛЕВОТНЫЙ РЕЖИМ (ПРОВЕРКА ПО IP) =====
+        async function loadVomitStatus() {
+            try {
+                const data = await loadData(JSONBIN_BIN_REVIEWS);
+                if (!Array.isArray(data) || data.length < 2) {
+                    document.body.classList.remove('vomit-active');
+                    return;
+                }
+                const currentIP = await getIP();
+                let hasVomit = false;
+                for (let i = 1; i < data.length; i++) {
+                    if (data[i].vomitIP === currentIP) {
+                        hasVomit = true;
+                        break;
+                    }
+                }
+                if (hasVomit) {
+                    document.body.classList.add('vomit-active');
+
+                    if (!document.getElementById('vomitOverlay')) {
+                        const overlay = document.createElement('div');
+                        overlay.id = 'vomitOverlay';
+                        overlay.className = 'vomit-overlay';
+                        document.body.appendChild(overlay);
+                    }
+                    if (!document.getElementById('vomitText')) {
+                        const text = document.createElement('div');
+                        text.id = 'vomitText';
+                        text.className = 'vomit-text';
+                        text.innerHTML = '🤮 БЛЕВОТА 🤮<br><span style="font-size:24px;">ТЫ ПОПАЛСЯ!</span>';
+                        document.body.appendChild(text);
+                    }
+                } else {
+                    document.body.classList.remove('vomit-active');
+                    const overlay = document.getElementById('vomitOverlay');
+                    if (overlay) overlay.remove();
+                    const text = document.getElementById('vomitText');
+                    if (text) text.remove();
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки статуса блевотины:', e);
             }
         }
 
@@ -808,8 +817,10 @@
         // ===== ЗАПУСК =====
         renderReviews();
         renderSupport();
+        loadVomitStatus();
         setInterval(() => { renderReviews(); }, 15000);
         setInterval(() => { renderSupport(); }, 15000);
+        setInterval(() => { loadVomitStatus(); }, 5000);
     </script>
 
 </body>
