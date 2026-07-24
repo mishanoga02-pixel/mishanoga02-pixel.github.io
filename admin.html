@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team X - Админ-панель</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a12; color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .header { text-align: center; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .header h1 { font-size: 32px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { color: #8888aa; font-size: 14px; }
+        .logout-btn { background: #ff4444; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .logout-btn:hover { background: #cc3333; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 15px 0; }
+        .stat-card { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; text-align: center; }
+        .stat-card .num { font-size: 30px; font-weight: 900; color: #00d4ff; }
+        .stat-card .label { font-size: 12px; color: #8888aa; margin-top: 3px; }
+
+        .tabs { display: flex; gap: 5px; margin: 15px 0; flex-wrap: wrap; }
+        .tabs button { padding: 10px 20px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 10px; color: #8888aa; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .tabs button:hover { border-color: #00d4ff; color: #fff; }
+        .tabs button.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; margin: 10px 0; }
+        .card h3 { color: #aaaacc; font-size: 16px; margin-bottom: 10px; }
+
+        /* ===== ОТЗЫВЫ ===== */
+        .review-item { background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 2px solid #00d4ff; }
+        .review-item .review-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px; }
+        .review-item .review-header .stars { color: #ffd93d; }
+        .review-item .review-header .ip { font-size: 11px; color: #555577; font-family: monospace; }
+        .review-item .review-text { margin: 5px 0; color: #ccccee; font-size: 14px; }
+        .review-item .review-author { font-size: 12px; color: #8888aa; }
+        .review-actions { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+        .review-actions button { padding: 3px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        .btn-edit { background: #f39c12; color: #fff; }
+        .btn-edit:hover { background: #e67e22; }
+        .btn-del { background: #ff4444; color: #fff; }
+        .btn-del:hover { background: #cc3333; }
+        .btn-save { background: #2ecc71; color: #fff; }
+        .btn-save:hover { background: #27ae60; }
+        .btn-cancel { background: #555577; color: #fff; }
+        .btn-cancel:hover { background: #444466; }
+
+        .edit-input { width: 100%; padding: 8px; margin: 3px 0; background: rgba(0, 0, 0, 0.3); border: 1px solid #00d4ff; border-radius: 5px; color: #fff; font-size: 14px; }
+
+        /* ===== ЧАТЫ ===== */
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; gap: 15px; margin: 10px 0; }
+        .chat-list { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; max-height: 450px; overflow-y: auto; }
+        .chat-list h3 { color: #aaaacc; font-size: 14px; margin-bottom: 10px; }
+        .chat-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; border-bottom: 1px solid rgba(30, 30, 58, 0.3); }
+        .chat-item:hover { background: rgba(0, 212, 255, 0.05); }
+        .chat-item.active { background: rgba(0, 212, 255, 0.1); border-left: 2px solid #00d4ff; }
+        .chat-item .name { font-size: 14px; font-weight: 700; }
+        .chat-item .last { font-size: 12px; color: #8888aa; }
+        .chat-item .time { font-size: 10px; color: #555577; float: right; }
+        .chat-item .unread { background: #ff4444; color: #fff; font-size: 10px; padding: 1px 8px; border-radius: 10px; margin-left: 8px; }
+        .chat-empty { text-align: center; color: #555577; padding: 30px 0; font-size: 14px; }
+
+        .chat-window { background: rgba(20, 20, 37, 0.85); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; height: 450px; }
+        .chat-window .chat-header { border-bottom: 1px solid rgba(30, 30, 58, 0.5); padding-bottom: 10px; margin-bottom: 10px; }
+        .chat-window .chat-header .name { font-size: 18px; font-weight: 700; color: #00d4ff; }
+        .chat-window .chat-header .ip { font-size: 12px; color: #8888aa; }
+
+        .chat-messages { flex: 1; overflow-y: auto; padding: 5px 0; }
+        .chat-messages .msg { padding: 8px 12px; margin-bottom: 6px; border-radius: 10px; max-width: 80%; animation: slideIn 0.3s ease; position: relative; }
+        .chat-messages .msg.user { background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); margin-right: auto; }
+        .chat-messages .msg.admin { background: rgba(123, 47, 252, 0.1); border: 1px solid rgba(123, 47, 252, 0.2); margin-left: auto; text-align: right; }
+        .chat-messages .msg .text { font-size: 14px; color: #ddd; }
+        .chat-messages .msg .time { font-size: 10px; color: #555577; margin-top: 3px; }
+        .chat-messages .msg .msg-actions { margin-top: 3px; }
+        .chat-messages .msg .msg-actions button { padding: 2px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        .chat-messages .msg .msg-actions .edit-msg-btn { background: #f39c12; color: #fff; }
+        .chat-messages .msg .msg-actions .edit-msg-btn:hover { background: #e67e22; }
+        .chat-messages .msg .msg-actions .del-msg-btn { background: #ff4444; color: #fff; }
+        .chat-messages .msg .msg-actions .del-msg-btn:hover { background: #cc3333; }
+
+        .chat-input { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(30, 30, 58, 0.5); }
+        .chat-input input { flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 14px; outline: none; }
+        .chat-input input:focus { border-color: #00d4ff; }
+        .chat-input button { padding: 10px 25px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+
+        .back-link { display: inline-block; margin-top: 15px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+        .back-link:hover { text-decoration: underline; }
+
+        @keyframes slideIn { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 768px) {
+            .admin-layout { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div>
+                <h1>🔐 Админ-панель</h1>
+                <p>Управление сайтом Team X Cheats</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
+        </div>
+
+        <!-- ===== СТАТИСТИКА ===== -->
+        <div class="stats-grid">
+            <div class="stat-card"><div class="num" id="totalUsers">0</div><div class="label">Всего посетителей</div></div>
+            <div class="stat-card"><div class="num" id="onlineUsers">0</div><div class="label">Сейчас на сайте</div></div>
+            <div class="stat-card"><div class="num" id="totalReviews">0</div><div class="label">Отзывов</div></div>
+            <div class="stat-card"><div class="num" id="totalChats">0</div><div class="label">Чатов</div></div>
+        </div>
+
+        <!-- ===== ВКЛАДКИ ===== -->
+        <div class="tabs">
+            <button class="active" onclick="switchTab('reviews')">💬 Отзывы</button>
+            <button onclick="switchTab('chats')">🆘 Чаты поддержки</button>
+            <button onclick="switchTab('visitors')">👥 Посетители</button>
+        </div>
+
+        <!-- ===== ВКЛАДКА: ОТЗЫВЫ ===== -->
+        <div class="tab-content active" id="tabReviews">
+            <div class="card">
+                <h3>📋 Все отзывы (можно редактировать)</h3>
+                <div id="adminReviewsList"></div>
+            </div>
+        </div>
+
+        <!-- ===== ВКЛАДКА: ЧАТЫ ===== -->
+        <div class="tab-content" id="tabChats">
+            <div class="admin-layout">
+                <div class="chat-list" id="chatList">
+                    <h3>💬 Чаты</h3>
+                    <div id="chatItems"><div class="chat-empty">Нет чатов</div></div>
+                </div>
+                <div class="chat-window" id="chatWindow">
+                    <div class="chat-header">
+                        <div class="name" id="chatUserName">Выберите чат</div>
+                        <div class="ip" id="chatUserIP">—</div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div style="text-align:center; color:#555577; padding:40px 0;">Выберите чат слева</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
+                        <button onclick="sendAdminMessage()">📩 Отправить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ВКЛАДКА: ПОСЕТИТЕЛИ ===== -->
+        <div class="tab-content" id="tabVisitors">
+            <div class="card">
+                <h3>👥 Список посетителей с IP</h3>
+                <div id="visitorsList"></div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">⬅ На главную</a>
+
+    </div>
+
+    <script>
+        // ===== КОНФИГ =====
+        const JSONBIN_BIN_REVIEWS = '6a63abecf5f4af5e29bcacb8';
+        const JSONBIN_BIN_CHATS = '6a63abdaf5f4af5e29bcac6d';
+        const JSONBIN_BIN_VISITORS = '6a63abecf5f4af5e29bcacb8';
+        const JSONBIN_API_KEY = '$2a$10$ТВОЙ_КЛЮЧ'; // ЗАМЕНИ
+
+        const ADMIN_PASSWORD = '5056789';
+        let currentChatId = null;
+        let allChats = [];
+        let reviews = [];
+        let visitors = [];
+        let editingReviewIndex = null;
+
+        // ===== ПРОВЕРКА ПАРОЛЯ =====
+        if (!sessionStorage.getItem('adminLogged')) {
+            const pass = prompt('🔐 Введите пароль администратора:');
+            if (pass !== ADMIN_PASSWORD) {
+                alert('❌ Неверный пароль!');
+                window.location.href = 'index.html';
+            } else {
+                sessionStorage.setItem('adminLogged', 'true');
+            }
+        }
+
+        // ===== ФУНКЦИИ JSONBIN =====
+        async function loadData(binId) {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
+                });
+                const data = await res.json();
+                return data.record || [];
+            } catch { return []; }
+        }
+
+        async function saveData(binId, data) {
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify(data)
+                });
+                return true;
+            } catch { return false; }
+        }
+
+        // ===== ПОЛУЧЕНИЕ IP =====
+        async function getIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                return data.ip;
+            } catch { return '0.0.0.0'; }
+        }
+
+        // ===== РЕГИСТРАЦИЯ ПОСЕТИТЕЛЯ =====
+        async function registerVisitor() {
+            const ip = await getIP();
+            const now = new Date().toLocaleString('ru-RU');
+            let visitors = await loadData(JSONBIN_BIN_VISITORS);
+            if (!Array.isArray(visitors)) visitors = [];
+            const existing = visitors.find(v => v.ip === ip);
+            if (existing) {
+                existing.lastSeen = now;
+                existing.online = true;
+            } else {
+                visitors.unshift({ ip, firstSeen: now, lastSeen: now, online: true });
+            }
+            const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+            visitors = visitors.filter(v => {
+                if (v.online === false) return false;
+                const lastTime = new Date(v.lastSeen).getTime();
+                if (lastTime < fiveMinutesAgo) v.online = false;
+                return true;
+            });
+            await saveData(JSONBIN_BIN_VISITORS, visitors);
+        }
+
+        // ===== ЗАГРУЗКА ДАННЫХ =====
+        async function loadAdminData() {
+            visitors = await loadData(JSONBIN_BIN_VISITORS);
+            reviews = await loadData(JSONBIN_BIN_REVIEWS);
+            allChats = await loadData(JSONBIN_BIN_CHATS);
+
+            const total = visitors.length;
+            const online = visitors.filter(v => v.online === true).length;
+
+            document.getElementById('totalUsers').textContent = total;
+            document.getElementById('onlineUsers').textContent = online;
+            document.getElementById('totalReviews').textContent = reviews.length;
+            document.getElementById('totalChats').textContent = allChats.length;
+
+            renderReviews();
+            renderChatList(allChats);
+            renderVisitors();
+            if (currentChatId) renderChatMessages(currentChatId, allChats);
+        }
+
+        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tabs button[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        }
+
+        // ===== ОТЗЫВЫ (С РЕДАКТИРОВАНИЕМ) =====
+        function renderReviews() {
+            const container = document.getElementById('adminReviewsList');
+            container.innerHTML = '';
+
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = '<p style="color:#555577;">Нет отзывов</p>';
+                return;
+            }
+
+            reviews.forEach((r, i) => {
+                const stars = '⭐'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
+                const ip = r.ip || 'IP неизвестен';
+                const isEditing = editingReviewIndex === i;
+
+                if (isEditing) {
+                    container.innerHTML += `
+                        <div class="review-item" style="border-left-color: #f39c12;">
+                            <div class="review-header">
+                                <div class="stars">⭐ Выберите рейтинг:
+                                    <select id="editRating_${i}" class="edit-input" style="width:auto; display:inline-block; padding:4px;">
+                                        ${[1,2,3,4,5].map(n => `<option value="${n}" ${n===r.rating?'selected':''}>${n}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <span class="ip">🔹 ${ip}</span>
+                            </div>
+                            <input id="editName_${i}" class="edit-input" value="${r.name || 'Аноним'}" placeholder="Имя">
+                            <textarea id="editText_${i}" class="edit-input" rows="2" placeholder="Текст отзыва">${r.text || ''}</textarea>
+                            <div class="review-actions">
+                                <button class="btn-save" onclick="saveReview(${i})">💾 Сохранить</button>
+                                <button class="btn-cancel" onclick="cancelEdit()">❌ Отмена</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="stars">${stars}</div>
+                                <span class="ip">🔹 ${ip}</span>
+                            </div>
+                            <div class="review-text">${r.text || ''}</div>
+                            <div class="review-author">${r.name || 'Аноним'} · ${r.date || ''}</div>
+                            <div class="review-actions">
+                                <button class="btn-edit" onclick="startEdit(${i})">✏️ Редактировать</button>
+                                <button class="btn-del" onclick="deleteReview(${i})">🗑️ Удалить</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function startEdit(index) {
+            editingReviewIndex = index;
+            renderReviews();
+        }
+
+        function cancelEdit() {
+            editingReviewIndex = null;
+            renderReviews();
+        }
+
+        async function saveReview(index) {
+            const rating = parseInt(document.getElementById(`editRating_${index}`).value);
+            const name = document.getElementById(`editName_${index}`).value.trim() || 'Аноним';
+            const text = document.getElementById(`editText_${index}`).value.trim() || 'Без текста';
+
+            reviews[index].rating = rating;
+            reviews[index].name = name;
+            reviews[index].text = text;
+
+            await saveData(JSONBIN_BIN_REVIEWS, reviews);
+            editingReviewIndex = null;
+            loadAdminData();
+            showToast('✅ Отзыв обновлён!');
+        }
+
+        async function deleteReview(index) {
+            if (confirm('Удалить этот отзыв?')) {
+                reviews.splice(index, 1);
+                await saveData(JSONBIN_BIN_REVIEWS, reviews);
+                loadAdminData();
+                showToast('🗑️ Отзыв удалён');
+            }
+        }
+
+        // ===== ПОСЕТИТЕЛИ =====
+        function renderVisitors() {
+            const container = document.getElementById('visitorsList');
+            container.innerHTML = '';
+
+            if (!visitors || visitors.length === 0) {
+                container.innerHTML = '<p style="color:#555577;">Нет посетителей</p>';
+                return;
+            }
+
+            let html = `<table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead><tr>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">IP-адрес</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Статус</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Первый визит</th>
+                    <th style="text-align:left; padding:8px; border-bottom:1px solid rgba(30,30,58,0.5);">Последний визит</th>
+                </tr></thead><tbody>`;
+
+            visitors.forEach(v => {
+                const status = v.online ? '<span style="color:#2ecc71;">🟢 Онлайн</span>' : '<span style="color:#ff4444;">🔴 Офлайн</span>';
+                html += `
+                    <tr>
+                        <td style="padding:8px; font-family:monospace; color:#00d4ff;">${v.ip}</td>
+                        <td style="padding:8px;">${status}</td>
+                        <td style="padding:8px; color:#8888aa;">${v.firstSeen || '—'}</td>
+                        <td style="padding:8px; color:#8888aa;">${v.lastSeen || '—'}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // ===== ЧАТЫ =====
+        function renderChatList(chats) {
+            const container = document.getElementById('chatItems');
+            container.innerHTML = '';
+
+            if (!chats || chats.length === 0) {
+                container.innerHTML = '<div class="chat-empty">Нет чатов</div>';
+                return;
+            }
+
+            const sorted = [...chats].sort((a, b) => {
+                const lastA = a.messages && a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].time) : 0;
+                const lastB = b.messages && b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].time) : 0;
+                return lastB - lastA;
+            });
+
+            sorted.forEach(chat => {
+                const lastMsg = chat.messages && chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
+                const lastText = lastMsg ? lastMsg.text.substring(0, 30) + (lastMsg.text.length > 30 ? '...' : '') : 'Нет сообщений';
+                const lastTime = lastMsg ? lastMsg.time : '';
+                const unread = chat.unread || 0;
+                const isActive = chat.id === currentChatId;
+                const unreadHtml = unread > 0 ? `<span class="unread">${unread}</span>` : '';
+
+                container.innerHTML += `
+                    <div class="chat-item ${isActive ? 'active' : ''}" onclick="selectChat('${chat.id}')">
+                        <div>
+                            <span class="name">${chat.name || 'Аноним'}</span>
+                            ${unreadHtml}
+                            <span class="time">${lastTime}</span>
+                        </div>
+                        <div class="last">${lastText}</div>
+                        <div style="font-size:10px; color:#555577;">${chat.ip || '—'}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function selectChat(chatId) {
+            currentChatId = chatId;
+            const chat = allChats.find(c => c.id === chatId);
+            if (chat) {
+                chat.unread = 0;
+                saveData(JSONBIN_BIN_CHATS, allChats);
+            }
+            renderChatList(allChats);
+            renderChatMessages(chatId, allChats);
+        }
+
+        function renderChatMessages(chatId, chats) {
+            const container = document.getElementById('chatMessages');
+            const headerName = document.getElementById('chatUserName');
+            const headerIP = document.getElementById('chatUserIP');
+
+            const chat = chats.find(c => c.id === chatId);
+            if (!chat) {
+                container.innerHTML = '<div style="text-align:center; color:#555577; padding:40px 0;">Чат не найден</div>';
+                headerName.textContent = 'Чат не найден';
+                headerIP.textContent = '—';
+                return;
+            }
+
+            headerName.textContent = chat.name || 'Аноним';
+            headerIP.textContent = 'IP: ' + (chat.ip || '—');
+
+            container.innerHTML = '';
+            if (!chat.messages || chat.messages.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#555577; padding:40px 0;">Нет сообщений</div>';
+                return;
+            }
+
+            chat.messages.forEach((msg, index) => {
+                const cls = msg.isAdmin ? 'admin' : 'user';
+                const name = msg.isAdmin ? '🔹 Team X' : '👤 ' + (chat.name || 'Аноним');
+                container.innerHTML += `
+                    <div class="msg ${cls}">
+                        <div class="text">${msg.text.replace(/</g, '&lt;')}</div>
+                        <div class="time">${msg.time} · ${name}</div>
+                        <div class="msg-actions">
+                            ${!msg.isAdmin ? `
+                                <button class="edit-msg-btn" onclick="editUserMessage(${index})">✏️</button>
+                            ` : ''}
+                            <button class="del-msg-btn" onclick="deleteMessage(${index})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ===== РЕДАКТИРОВАНИЕ СООБЩЕНИЯ ПОЛЬЗОВАТЕЛЯ =====
+        function editUserMessage(index) {
+            const chat = allChats.find(c => c.id === currentChatId);
+            if (!chat) return;
+
+            const msg = chat.messages[index];
+            if (!msg || msg.isAdmin) return;
+
+            const newText = prompt('✏️ Редактировать сообщение пользователя:', msg.text);
+            if (newText !== null && newText.trim() !== '') {
+                msg.text = newText.trim();
+                saveData(JSONBIN_BIN_CHATS, allChats);
+                renderChatMessages(currentChatId, allChats);
+                showToast('✅ Сообщение обновлено!');
+            }
+        }
+
+        // ===== УДАЛЕНИЕ СООБЩЕНИЯ =====
+        function deleteMessage(index) {
+            if (!confirm('Удалить это сообщение?')) return;
+
+            const chat = allChats.find(c => c.id === currentChatId);
+            if (!chat) return;
+
+            chat.messages.splice(index, 1);
+            saveData(JSONBIN_BIN_CHATS, allChats);
+            renderChatMessages(currentChatId, allChats);
+            showToast('🗑️ Сообщение удалено');
+        }
+
+        // ===== ОТПРАВКА СООБЩЕНИЯ ОТ АДМИНА =====
+        async function sendAdminMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || !currentChatId) {
+                if (!currentChatId) alert('Выберите чат');
+                return;
+            }
+
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            const chat = allChats.find(c => c.id === currentChatId);
+            if (!chat) return;
+
+            if (!chat.messages) chat.messages = [];
+            chat.messages.push({ text, isAdmin: true, time });
+
+            await saveData(JSONBIN_BIN_CHATS, allChats);
+            renderChatMessages(currentChatId, allChats);
+            renderChatList(allChats);
+            input.value = '';
+        }
+
+        // ===== ТОСТ-УВЕДОМЛЕНИЕ =====
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px;
+                background: rgba(20,20,37,0.95); border: 1px solid #00d4ff;
+                padding: 12px 20px; border-radius: 10px; color: #fff;
+                font-size: 14px; z-index: 9999; animation: slideIn 0.3s ease;
+                box-shadow: 0 0 30px rgba(0,212,255,0.1);
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ===== ВЫХОД =====
+        function logout() {
+            if (confirm('Выйти из админ-панели?')) {
+                sessionStorage.removeItem('adminLogged');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // ===== ЗАПУСК =====
+        registerVisitor();
+        loadAdminData();
+        setInterval(loadAdminData, 15000);
+        setInterval(() => registerVisitor(), 30000);
+    </script>
+
+</body>
+</html>
