@@ -123,87 +123,62 @@
         .footer { text-align: center; color: #444466; font-size: 12px; padding: 20px 0; border-top: 1px solid rgba(20, 20, 37, 0.5); margin-top: 20px; }
 
         .admin-btn-small {
-            background: none;
-            border: none;
-            color: #333355;
-            font-size: 10px;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 0;
-            margin: 0;
-            transition: 0.3s;
+            background: none; border: none; color: #333355; font-size: 10px; cursor: pointer; text-decoration: underline; padding: 0; margin: 0; transition: 0.3s;
         }
-        .admin-btn-small:hover {
-            color: #00d4ff;
-        }
+        .admin-btn-small:hover { color: #00d4ff; }
 
         .admin-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center;
         }
         .admin-modal-overlay.show { display: flex; }
 
         .admin-modal-box {
-            background: rgba(20, 20, 37, 0.95);
-            border: 1px solid #00d4ff;
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 350px;
-            width: 90%;
-            text-align: center;
-            animation: fadeUp 0.3s ease;
+            background: rgba(20, 20, 37, 0.95); border: 1px solid #00d4ff; border-radius: 16px; padding: 30px; max-width: 350px; width: 90%; text-align: center; animation: fadeUp 0.3s ease;
         }
         .admin-modal-box h3 { color: #00d4ff; margin-bottom: 15px; }
         .admin-modal-box input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(30, 30, 58, 0.5);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            margin-bottom: 10px;
-            text-align: center;
+            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 16px; outline: none; margin-bottom: 10px; text-align: center;
         }
         .admin-modal-box input:focus { border-color: #00d4ff; }
         .admin-modal-box button {
-            padding: 10px 30px;
-            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
+            padding: 10px 30px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
         .admin-modal-box button:hover { transform: scale(1.05); }
-        .admin-modal-box .error {
-            color: #ff4444;
-            font-size: 13px;
-            margin-top: 8px;
-            display: none;
-        }
-        .admin-modal-box .close-btn {
-            float: right;
-            background: none;
-            border: none;
-            color: #ff4444;
-            font-size: 22px;
+        .admin-modal-box .error { color: #ff4444; font-size: 13px; margin-top: 8px; display: none; }
+        .admin-modal-box .close-btn { float: right; background: none; border: none; color: #ff4444; font-size: 22px; cursor: pointer; }
+
+        /* ===== ПАСХАЛКИ С МЕМАМИ ===== */
+        .meme-section { margin: 30px 0; text-align: center; }
+        .meme-section h3 { color: #8888aa; font-size: 16px; margin-bottom: 10px; }
+        .meme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .meme-card {
+            background: rgba(20, 20, 37, 0.85);
+            border: 1px solid rgba(30, 30, 58, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
             cursor: pointer;
         }
+        .meme-card:hover { border-color: #ff6b6b; transform: scale(1.02); }
+        .meme-card .emoji { font-size: 48px; }
+        .meme-card .name { font-size: 14px; color: #aaaacc; margin-top: 8px; }
+        .meme-card .desc { font-size: 11px; color: #555577; }
 
-        @media (max-width: 992px) { .game-selector { grid-template-columns: repeat(3, 1fr); } .counter-section { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .game-selector { grid-template-columns: 1fr 1fr; } .counter-section { grid-template-columns: 1fr; } .screenshots-grid { grid-template-columns: 1fr 1fr; } .features-list { grid-template-columns: 1fr; } h1 { font-size: 32px; } }
-        @media (max-width: 480px) { .game-selector { grid-template-columns: 1fr; } .screenshots-grid { grid-template-columns: 1fr; } .support-input { flex-direction: column; } }
+        @media (max-width: 768px) {
+            .meme-grid { grid-template-columns: 1fr 1fr; }
+            .game-selector { grid-template-columns: 1fr 1fr; }
+            .counter-section { grid-template-columns: 1fr; }
+            .screenshots-grid { grid-template-columns: 1fr 1fr; }
+            .features-list { grid-template-columns: 1fr; }
+            h1 { font-size: 32px; }
+        }
+        @media (max-width: 480px) {
+            .meme-grid { grid-template-columns: 1fr; }
+            .game-selector { grid-template-columns: 1fr; }
+            .screenshots-grid { grid-template-columns: 1fr; }
+            .support-input { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -389,6 +364,43 @@
             </div>
         </div>
 
+        <!-- ===== ПАСХАЛКИ С МЕМАМИ ===== -->
+        <div class="meme-section">
+            <h3>🎭 Нажми на мем — получи порцию хаоса!</h3>
+            <div class="meme-grid">
+                <div class="meme-card" onclick="triggerMeme('rickroll')">
+                    <div class="emoji">🎵</div>
+                    <div class="name">Rick Astley</div>
+                    <div class="desc">"Never gonna give you up"</div>
+                </div>
+                <div class="meme-card" onclick="triggerMeme('thisisfine')">
+                    <div class="emoji">🔥</div>
+                    <div class="name">This Is Fine</div>
+                    <div class="desc">Всё горит, а я в порядке</div>
+                </div>
+                <div class="meme-card" onclick="triggerMeme('dogecoin')">
+                    <div class="emoji">🐕</div>
+                    <div class="name">Doge</div>
+                    <div class="desc">Such wow, very meme</div>
+                </div>
+                <div class="meme-card" onclick="triggerMeme('sus')">
+                    <div class="emoji">👀</div>
+                    <div class="name">SUS</div>
+                    <div class="desc">Ты подозреваемый!</div>
+                </div>
+                <div class="meme-card" onclick="triggerMeme('stonks')">
+                    <div class="emoji">📈</div>
+                    <div class="name">Stonks</div>
+                    <div class="desc">Только вверх!</div>
+                </div>
+                <div class="meme-card" onclick="triggerMeme('brain')">
+                    <div class="emoji">🧠</div>
+                    <div class="name">Big Brain</div>
+                    <div class="desc">Мозг взорван</div>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== ПАСХАЛКА 67 ===== -->
         <div class="easter-egg" id="easterEgg">
             <div class="number">🔮 67</div>
@@ -400,11 +412,14 @@
             </div>
         </div>
 
-        <!-- ===== ФУТЕР С МАЛЕНЬКОЙ КНОПКОЙ ===== -->
+        <!-- ===== ФУТЕР ===== -->
         <div class="footer">
             <p>© 2026 Team X · Все права защищены</p>
             <p style="margin-top:5px; font-size:11px; color:#333355;">
                 <button class="admin-btn-small" onclick="openAdminModal()">🔐 админ</button>
+            </p>
+            <p style="margin-top:6px; font-size:9px; color:#222244; letter-spacing:0.3px;">
+                Автор не несёт ответственности за использование данного ПО.
             </p>
         </div>
 
@@ -728,6 +743,31 @@
             }, 4000);
         }
 
+        // ===== ПАСХАЛКИ С МЕМАМИ =====
+        function triggerMeme(type) {
+            const messages = {
+                'rickroll': "🎵 Never gonna give you up! 🎵",
+                'thisisfine': "🔥 ВСЁ ГОРИТ! 🔥 Но я в порядке...",
+                'dogecoin': "🐕 Such wow! Very meme! Much doge!",
+                'sus': "👀 ТЫ ПОДОЗРЕВАЕМЫЙ! КАРТА ГОЛОСОВАНИЯ!",
+                'stonks': "📈 STONKS! ТОЛЬКО ВВЕРХ! 🚀",
+                'brain': "🧠 ТВОЙ МОЗГ ВЗОРВАН! 200 IQ!"
+            };
+            
+            const emojis = ['😂', '🤣', '😅', '🥲', '😜', '🤪', '😝', '😁', '😆'];
+            
+            // Показываем сообщение
+            showToastMessage(messages[type] || "🤡 МЕМ АКТИВИРОВАН!");
+            
+            // Дополнительный эффект
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                    showToastMessage(randomEmoji + " " + messages[type]);
+                }, i * 600);
+            }
+        }
+
         // ===== АДМИН-КНОПКА (ПАРОЛЬ 5056789) =====
         function openAdminModal() {
             document.getElementById('adminModal').classList.add('show');
@@ -752,17 +792,15 @@
             }
         }
 
-        // Закрытие по ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeAdminModal();
         });
 
-        // Закрытие по клику вне окна
         document.getElementById('adminModal').addEventListener('click', function(e) {
             if (e.target === this) closeAdminModal();
         });
 
-        // ===== ПАСХАЛКА =====
+        // ===== ПАСХАЛКА 67 =====
         document.getElementById('easterEgg').addEventListener('click', function() {
             this.classList.toggle('active');
         });
