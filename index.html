@@ -1,981 +1,1703 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="WinterPulse — новогодний отсчёт и погода">
+<title>WinterPulse — Новый год 2027</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html {
-    scroll-behavior: smooth;
+:root{
+    --bg:#07111f;
+    --bg2:#0c1d31;
+    --card:rgba(10,26,44,.78);
+    --line:rgba(255,255,255,.11);
+    --text:#f5f9ff;
+    --muted:#91a7bf;
+    --blue:#58baff;
+    --blue2:#276bd1;
+    --cyan:#68e6ff;
+    --green:#67df9a;
+    --shadow:0 25px 70px rgba(0,0,0,.35);
 }
 
-body {
-    min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    background: #071323;
-    overflow-x: hidden;
+html{
+    scroll-behavior:smooth;
 }
 
+body{
+    min-height:100vh;
+    color:var(--text);
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(81,163,255,.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #07111f 0%,
+            #09192b 50%,
+            #06101d 100%
+        );
+    overflow-x:hidden;
+}
 
 /* =========================
    BACKGROUND
 ========================= */
 
-.background {
-    position: fixed;
-    inset: 0;
-    z-index: -5;
-
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-10;
+    overflow:hidden;
     background:
         radial-gradient(
-            circle at 50% 20%,
-            rgba(60, 120, 190, 0.28),
-            transparent 38%
+            circle at 70% 12%,
+            rgba(119,190,255,.13),
+            transparent 23%
         ),
         linear-gradient(
             180deg,
-            #06101f 0%,
-            #0b1d35 45%,
-            #102945 100%
+            #081729 0%,
+            #0a1d31 48%,
+            #07121f 100%
         );
 }
 
-
-/* =========================
-   SNOW
-========================= */
-
-.snow {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 20;
-    overflow: hidden;
+.stars{
+    position:absolute;
+    inset:0;
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.9) 0 1px,
+            transparent 1.5px
+        ),
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.5) 0 1px,
+            transparent 1.5px
+        );
+    background-size:120px 120px,190px 190px;
+    background-position:10px 15px,70px 50px;
+    opacity:.65;
 }
 
-.snowflake {
-    position: absolute;
-    top: -20px;
-
-    color: white;
-
-    user-select: none;
-    pointer-events: none;
-
-    animation-name: snowFall;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-
-    opacity: 0.8;
-
-    text-shadow:
-        0 0 5px rgba(255, 255, 255, 0.8);
+.moon{
+    position:absolute;
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    right:12%;
+    top:8%;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #c7e5ff
+        );
+    box-shadow:
+        0 0 35px rgba(179,221,255,.45),
+        0 0 90px rgba(87,163,255,.14);
 }
 
-@keyframes snowFall {
-    0% {
-        transform:
-            translate3d(0, -20px, 0)
-            rotate(0deg);
+.moon::before,
+.moon::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    background:rgba(127,169,205,.12);
+}
+
+.moon::before{
+    width:25px;
+    height:25px;
+    left:28px;
+    top:28px;
+}
+
+.moon::after{
+    width:15px;
+    height:15px;
+    right:25px;
+    bottom:30px;
+}
+
+.cloud{
+    position:absolute;
+    width:240px;
+    height:55px;
+    border-radius:50px;
+    background:rgba(151,190,222,.08);
+}
+
+.cloud::before,
+.cloud::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    background:inherit;
+}
+
+.cloud::before{
+    width:90px;
+    height:90px;
+    left:35px;
+    bottom:0;
+}
+
+.cloud::after{
+    width:120px;
+    height:120px;
+    right:35px;
+    bottom:0;
+}
+
+.cloud.one{
+    top:23%;
+    left:-70px;
+    animation:cloudMove 38s linear infinite;
+}
+
+.cloud.two{
+    top:34%;
+    right:-100px;
+    transform:scale(.75);
+    animation:cloudMoveReverse 46s linear infinite;
+}
+
+@keyframes cloudMove{
+    from{
+        transform:translateX(-30px);
     }
 
-    25% {
-        transform:
-            translate3d(25px, 25vh, 0)
-            rotate(90deg);
-    }
-
-    50% {
-        transform:
-            translate3d(-20px, 50vh, 0)
-            rotate(180deg);
-    }
-
-    75% {
-        transform:
-            translate3d(25px, 75vh, 0)
-            rotate(270deg);
-    }
-
-    100% {
-        transform:
-            translate3d(-10px, 110vh, 0)
-            rotate(360deg);
+    to{
+        transform:translateX(calc(100vw + 400px));
     }
 }
 
+@keyframes cloudMoveReverse{
+    from{
+        transform:translateX(30px) scale(.75);
+    }
+
+    to{
+        transform:translateX(calc(-100vw - 400px)) scale(.75);
+    }
+}
+
+.snow{
+    position:absolute;
+    inset:0;
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.85) 0 1.5px,
+            transparent 2px
+        ),
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.65) 0 2px,
+            transparent 2.5px
+        ),
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.35) 0 1px,
+            transparent 1.5px
+        );
+    background-size:
+        85px 85px,
+        145px 145px,
+        55px 55px;
+    animation:snowFall 18s linear infinite;
+    opacity:.6;
+}
+
+@keyframes snowFall{
+    from{
+        background-position:
+            0 -100px,
+            30px -150px,
+            10px -50px;
+    }
+
+    to{
+        background-position:
+            80px 900px,
+            100px 850px,
+            50px 800px;
+    }
+}
+
+.city{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:180px;
+    background:
+        linear-gradient(
+            to top,
+            rgba(2,8,15,.98),
+            rgba(5,15,26,.9)
+        );
+    clip-path:polygon(
+        0 100%,
+        0 72%,
+        5% 72%,
+        5% 48%,
+        8% 48%,
+        8% 68%,
+        12% 68%,
+        12% 34%,
+        16% 34%,
+        16% 63%,
+        20% 63%,
+        20% 45%,
+        24% 45%,
+        24% 70%,
+        28% 70%,
+        28% 25%,
+        32% 25%,
+        32% 60%,
+        36% 60%,
+        36% 40%,
+        41% 40%,
+        41% 70%,
+        45% 70%,
+        45% 32%,
+        49% 32%,
+        49% 63%,
+        54% 63%,
+        54% 47%,
+        59% 47%,
+        59% 70%,
+        63% 70%,
+        63% 28%,
+        67% 28%,
+        67% 58%,
+        71% 58%,
+        71% 40%,
+        76% 40%,
+        76% 68%,
+        80% 68%,
+        80% 32%,
+        84% 32%,
+        84% 65%,
+        88% 65%,
+        88% 45%,
+        92% 45%,
+        92% 70%,
+        96% 70%,
+        96% 52%,
+        100% 52%,
+        100% 100%
+    );
+    opacity:.9;
+}
+
+.city::after{
+    content:"";
+    position:absolute;
+    inset:50px 0 0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 25px,
+            rgba(255,214,117,.08) 25px 29px,
+            transparent 29px 48px
+        );
+}
 
 /* =========================
    HEADER
 ========================= */
 
-.topbar {
-    width: min(1180px, calc(100% - 40px));
-    margin: 0 auto;
-
-    height: 80px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    padding:15px 22px;
+    background:rgba(5,15,27,.62);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--line);
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-
-    font-size: 17px;
-    font-weight: 700;
+.nav{
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
 }
 
-.logo-icon {
-    width: 38px;
-    height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 12px;
-
-    background: rgba(255, 255, 255, 0.09);
-
-    box-shadow:
-        inset 0 0 20px rgba(255, 255, 255, 0.04),
-        0 5px 25px rgba(0, 0, 0, 0.2);
-
-    font-size: 20px;
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:800;
+    font-size:20px;
 }
 
-.location {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-
-    color: rgba(255, 255, 255, 0.65);
-
-    font-size: 14px;
-}
-
-.location-dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-
-    background: #75b9ff;
-
-    box-shadow:
-        0 0 12px rgba(117, 185, 255, 0.8);
-}
-
-
-/* =========================
-   HERO
-========================= */
-
-.hero {
-    width: min(1100px, calc(100% - 30px));
-    margin: 0 auto;
-
-    text-align: center;
-
-    padding-top: 85px;
-    padding-bottom: 65px;
-}
-
-.badge {
-    display: inline-flex;
-    align-items: center;
-
-    padding: 9px 16px;
-
-    border: 1px solid rgba(255, 255, 255, 0.12);
-
-    border-radius: 100px;
-
-    background: rgba(255, 255, 255, 0.055);
-
-    color: rgba(255, 255, 255, 0.75);
-
-    font-size: 13px;
-
-    backdrop-filter: blur(12px);
-
-    animation: badgeFloat 3s ease-in-out infinite;
-}
-
-@keyframes badgeFloat {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-4px);
-    }
-}
-
-h1 {
-    margin-top: 24px;
-
-    font-size: clamp(48px, 8vw, 92px);
-
-    line-height: 0.95;
-
-    letter-spacing: -4px;
-
-    font-weight: 800;
-}
-
-h1 span {
-    display: block;
-
-    background:
-        linear-gradient(
-            120deg,
-            #ffffff,
-            #a7d8ff,
-            #ffffff
-        );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    color: transparent;
-}
-
-.subtitle {
-    margin-top: 23px;
-
-    color: rgba(255, 255, 255, 0.55);
-
-    font-size: 16px;
-}
-
-
-/* =========================
-   COUNTDOWN
-========================= */
-
-.countdown {
-    margin: 55px auto 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 12px;
-}
-
-.time-card {
-    width: 150px;
-    min-height: 145px;
-
-    padding: 24px 12px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    border-radius: 24px;
-
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.09),
-            rgba(255, 255, 255, 0.025)
+            #67c9ff,
+            #2468d6
         );
-
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-    backdrop-filter: blur(20px);
-
-    transition:
-        transform 0.25s ease,
-        border-color 0.25s ease;
+        0 8px 25px rgba(55,148,255,.3);
 }
 
-.time-card:hover {
-    transform: translateY(-7px);
-
-    border-color:
-        rgba(140, 205, 255, 0.35);
+.logo-icon svg{
+    width:24px;
+    height:24px;
+    fill:none;
+    stroke:white;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
-.time-value {
-    font-variant-numeric: tabular-nums;
-
-    font-size: 52px;
-
-    font-weight: 800;
-
-    letter-spacing: -2px;
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
-.time-label {
-    margin-top: 8px;
-
-    color: rgba(255, 255, 255, 0.45);
-
-    font-size: 13px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
+.icon-btn{
+    width:42px;
+    height:42px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:rgba(255,255,255,.05);
+    color:white;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.separator {
-    font-size: 40px;
-
-    color: rgba(255, 255, 255, 0.3);
-
-    padding-bottom: 25px;
+.icon-btn:hover{
+    background:rgba(255,255,255,.11);
+    transform:translateY(-2px);
 }
 
-.new-year-message {
-    margin-top: 28px;
-
-    opacity: 0;
-
-    transform: translateY(10px);
-
-    transition: 0.5s ease;
-
-    color: #dceeff;
-
-    font-size: 18px;
+.icon-btn svg{
+    width:20px;
+    height:20px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
 }
-
-.new-year-message.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 
 /* =========================
-   CITY
+   MAIN
 ========================= */
 
-.city-section {
-    width: 100%;
-
-    padding: 0 20px 40px;
+main{
+    max-width:1250px;
+    margin:auto;
+    padding:55px 22px 80px;
 }
 
-.city-image {
-    position: relative;
+.hero{
+    text-align:center;
+    padding:30px 0 45px;
+}
 
-    width: min(1180px, 100%);
-    height: 370px;
+.eyebrow{
+    color:var(--cyan);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    font-weight:700;
+    margin-bottom:16px;
+}
 
-    margin: auto;
-
-    overflow: hidden;
-
-    border-radius: 34px;
-
-    border: 1px solid rgba(255, 255, 255, 0.09);
-
+h1{
+    font-size:clamp(44px,8vw,88px);
+    line-height:.95;
+    letter-spacing:-4px;
+    margin-bottom:20px;
     background:
         linear-gradient(
             180deg,
-            #08182d 0%,
-            #0d2a46 55%,
-            #102e4a 100%
+            #fff,
+            #9ecfff
         );
-
-    box-shadow:
-        0 30px 100px rgba(0, 0, 0, 0.35);
+    -webkit-background-clip:text;
+    color:transparent;
 }
 
-.city-image::before {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background:
-        radial-gradient(
-            circle at 75% 27%,
-            rgba(210, 236, 255, 0.18),
-            transparent 13%
-        ),
-        radial-gradient(
-            circle at 20% 30%,
-            rgba(255, 255, 255, 0.07),
-            transparent 20%
-        );
-
-    pointer-events: none;
+.hero p{
+    max-width:620px;
+    margin:auto;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.6;
 }
 
-.moon {
-    position: absolute;
-
-    width: 75px;
-    height: 75px;
-
-    right: 12%;
-    top: 45px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #ffffff,
-            #d9ecff 70%
-        );
-
-    box-shadow:
-        0 0 45px rgba(205, 235, 255, 0.35);
+.countdown{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    max-width:800px;
+    margin:38px auto 0;
 }
 
-.city-glow {
-    position: absolute;
-
-    width: 100%;
-    height: 150px;
-
-    bottom: 0;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent,
-            rgba(53, 130, 180, 0.18)
-        );
+.time-card{
+    padding:23px 12px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:rgba(12,29,49,.72);
+    box-shadow:var(--shadow);
 }
 
-.city-skyline {
-    position: absolute;
-
-    bottom: 68px;
-    left: 0;
-
-    width: 100%;
-    height: 180px;
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-
-    gap: 7px;
+.time-number{
+    font-size:clamp(28px,5vw,48px);
+    font-weight:800;
 }
 
-.building {
-    position: relative;
-
-    background:
-        linear-gradient(
-            90deg,
-            #091724,
-            #10283a
-        );
-
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-
-    box-shadow:
-        5px 0 15px rgba(0, 0, 0, 0.12);
+.time-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
-
-.building::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 15px 8px;
-
-    background:
-        repeating-linear-gradient(
-            180deg,
-            rgba(220, 239, 255, 0.45) 0px,
-            rgba(220, 239, 255, 0.45) 3px,
-            transparent 3px,
-            transparent 18px
-        );
-
-    opacity: 0.35;
-}
-
-.b1 {
-    width: 70px;
-    height: 100px;
-}
-
-.b2 {
-    width: 100px;
-    height: 150px;
-}
-
-.b3 {
-    width: 65px;
-    height: 120px;
-}
-
-.b4 {
-    width: 120px;
-    height: 185px;
-}
-
-.b5 {
-    width: 85px;
-    height: 135px;
-}
-
-.b6 {
-    width: 105px;
-    height: 160px;
-}
-
-.b7 {
-    width: 60px;
-    height: 90px;
-}
-
-.road {
-    position: absolute;
-
-    bottom: 0;
-
-    width: 100%;
-    height: 70px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #0a1925,
-            #07111b
-        );
-}
-
-.road::before {
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-    top: -120px;
-
-    transform: translateX(-50%);
-
-    width: 170px;
-    height: 130px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.03),
-            transparent
-        );
-
-    clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
-}
-
-.road-line {
-    position: absolute;
-
-    top: 32px;
-
-    width: 65px;
-    height: 3px;
-
-    background: rgba(255, 255, 255, 0.35);
-
-    border-radius: 10px;
-}
-
-.road-line:nth-child(1) {
-    left: 20%;
-}
-
-.road-line:nth-child(2) {
-    left: 50%;
-
-    transform: translateX(-50%);
-}
-
-.road-line:nth-child(3) {
-    right: 20%;
-}
-
-.city-title {
-    position: absolute;
-
-    left: 35px;
-    bottom: 28px;
-
-    z-index: 5;
-
-    display: flex;
-    flex-direction: column;
-
-    text-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.city-title span {
-    font-size: 18px;
-
-    font-weight: 800;
-
-    letter-spacing: 4px;
-}
-
-.city-title small {
-    margin-top: 4px;
-
-    color: rgba(255, 255, 255, 0.45);
-
-    font-size: 11px;
-
-    letter-spacing: 2px;
-}
-
-
-/* =========================
-   WEATHER
-========================= */
-
-.weather-section {
-    width: min(1180px, calc(100% - 40px));
-
-    margin: 0 auto;
-
-    padding: 15px 0 30px;
-}
-
-.weather-card {
-    min-height: 125px;
-
-    padding: 25px 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border: 1px solid rgba(255, 255, 255, 0.09);
-
-    border-radius: 25px;
-
-    background:
-        rgba(255, 255, 255, 0.045);
-
-    backdrop-filter: blur(18px);
-}
-
-.weather-left {
-    display: flex;
-    align-items: center;
-
-    gap: 20px;
-}
-
-.weather-icon {
-    width: 65px;
-    height: 65px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 20px;
-
-    background:
-        rgba(255, 255, 255, 0.07);
-
-    font-size: 34px;
-}
-
-.weather-temperature {
-    font-size: 35px;
-
-    font-weight: 800;
-}
-
-.weather-description {
-    margin-top: 5px;
-
-    color: rgba(255, 255, 255, 0.55);
-
-    font-size: 14px;
-}
-
-.weather-right {
-    text-align: right;
-}
-
-.weather-city {
-    font-weight: 700;
-
-    font-size: 16px;
-}
-
-.weather-update {
-    margin-top: 6px;
-
-    color: rgba(255, 255, 255, 0.4);
-
-    font-size: 12px;
-}
-
 
 /* =========================
    INFO
 ========================= */
 
-.info-section {
-    width: min(1180px, calc(100% - 40px));
-
-    margin: 0 auto;
-
-    padding: 10px 0 80px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 16px;
+.info-grid{
+    display:grid;
+    grid-template-columns:1.3fr .7fr;
+    gap:18px;
+    margin-bottom:60px;
 }
 
-.info-card {
-    padding: 25px;
-
-    display: flex;
-    gap: 16px;
-
-    border-radius: 22px;
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    background:
-        rgba(255, 255, 255, 0.035);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
+.panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:25px;
+    padding:24px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(18px);
 }
 
-.info-card:hover {
-    transform: translateY(-5px);
-
-    background:
-        rgba(255, 255, 255, 0.06);
+.panel-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:20px;
 }
 
-.info-icon {
-    flex-shrink: 0;
-
-    width: 45px;
-    height: 45px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 14px;
-
-    background:
-        rgba(255, 255, 255, 0.07);
-
-    font-size: 21px;
+.panel-title h2{
+    font-size:20px;
 }
 
-.info-card h3 {
-    font-size: 15px;
+.city-name{
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:5px;
 }
 
-.info-card p {
-    margin-top: 8px;
-
-    color: rgba(255, 255, 255, 0.45);
-
-    line-height: 1.5;
-
-    font-size: 13px;
+.weather-text{
+    color:var(--muted);
 }
 
+.weather-temp{
+    font-size:50px;
+    font-weight:800;
+    margin:20px 0 5px;
+}
+
+.city-select{
+    border:1px solid var(--line);
+    background:#10243b;
+    color:white;
+    padding:11px 14px;
+    border-radius:12px;
+    outline:none;
+}
+
+.stat{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:13px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.stat:last-child{
+    border-bottom:0;
+}
+
+.stat span:first-child{
+    color:var(--muted);
+}
+
+/* =========================
+   CITY MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:none;
+    place-items:center;
+    background:rgba(1,7,13,.7);
+    backdrop-filter:blur(10px);
+    padding:20px;
+}
+
+.modal.show{
+    display:grid;
+}
+
+.modal-card{
+    width:min(520px,100%);
+    background:#0d2035;
+    border:1px solid var(--line);
+    border-radius:25px;
+    padding:24px;
+    box-shadow:0 30px 90px rgba(0,0,0,.6);
+    animation:modalIn .2s ease-out;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translateY(15px) scale(.98);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.modal-card h3{
+    margin-bottom:18px;
+    font-size:22px;
+}
+
+.close{
+    float:right;
+}
+
+.city-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+}
+
+.city-option{
+    padding:15px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    color:white;
+    border-radius:13px;
+    cursor:pointer;
+    text-align:left;
+    font-size:14px;
+    transition:.2s;
+}
+
+.city-option:hover{
+    background:rgba(84,163,235,.15);
+    border-color:rgba(98,183,255,.5);
+    transform:translateY(-2px);
+}
 
 /* =========================
    FOOTER
 ========================= */
 
-footer {
-    width: min(1180px, calc(100% - 40px));
-
-    margin: auto;
-
-    padding: 25px 0 35px;
-
-    border-top:
-        1px solid rgba(255, 255, 255, 0.07);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    color:
-        rgba(255, 255, 255, 0.35);
-
-    font-size: 12px;
+footer{
+    max-width:1250px;
+    margin:auto;
+    padding:0 22px 40px;
+    color:#71869d;
+    text-align:center;
+    font-size:13px;
 }
-
-.footer-snow {
-    letter-spacing: 8px;
-}
-
 
 /* =========================
-   MOBILE
+   RESPONSIVE
 ========================= */
 
-@media (max-width: 850px) {
+@media(max-width:850px){
 
-    .hero {
-        padding-top: 60px;
+    .info-grid{
+        grid-template-columns:1fr;
     }
 
-    .countdown {
-        gap: 5px;
-    }
-
-    .time-card {
-        width: 115px;
-        min-height: 120px;
-
-        padding: 15px 8px;
-
-        border-radius: 18px;
-    }
-
-    .time-value {
-        font-size: 38px;
-    }
-
-    .separator {
-        font-size: 28px;
-    }
-
-    .info-section {
-        grid-template-columns: 1fr;
-    }
 }
 
+@media(max-width:550px){
 
-@media (max-width: 600px) {
-
-    .topbar {
-        width: calc(100% - 28px);
-        height: 65px;
+    header{
+        padding:12px;
     }
 
-    .logo {
-        font-size: 14px;
+    main{
+        padding:35px 12px 60px;
     }
 
-    .location {
-        font-size: 12px;
+    h1{
+        letter-spacing:-2px;
     }
 
-    .hero {
-        padding-top: 48px;
+    .countdown{
+        gap:6px;
     }
 
-    h1 {
-        letter-spacing: -2px;
+    .time-card{
+        padding:16px 7px;
     }
 
-    .subtitle {
-        font-size: 14px;
+    .time-number{
+        font-size:26px;
     }
 
-    .countdown {
-        margin-top: 40px;
-
-        display: grid;
-
-        grid-template-columns:
-            1fr 1fr;
-
-        gap: 10px;
-
-        width: 100%;
+    .city-grid{
+        grid-template-columns:1fr;
     }
 
-    .time-card {
-        width: 100%;
-        min-height: 115px;
-    }
-
-    .separator {
-        display: none;
-    }
-
-    .time-value {
-        font-size: 38px;
-    }
-
-    .city-image {
-        height: 300px;
-
-        border-radius: 24px;
-    }
-
-    .city-title {
-        left: 22px;
-        bottom: 22px;
-    }
-
-    .city-title span {
-        font-size: 14px;
-        letter-spacing: 3px;
-    }
-
-    .building.b1,
-    .building.b7 {
-        display: none;
-    }
-
-    .weather-section {
-        width: calc(100% - 28px);
-    }
-
-    .weather-card {
-        padding: 20px;
-
-        align-items: flex-start;
-
-        flex-direction: column;
-
-        gap: 20px;
-    }
-
-    .weather-right {
-        text-align: left;
-    }
-
-    .info-section {
-        width: calc(100% - 28px);
-    }
-
-    footer {
-        width: calc(100% - 28px);
-
-        flex-direction: column;
-
-        gap: 12px;
-
-        text-align: center;
-    }
 }
+</style>
+
+</head>
+
+<body>
+
+<div class="background">
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <div class="cloud one"></div>
+    <div class="cloud two"></div>
+    <div class="snow"></div>
+    <div class="city"></div>
+</div>
+
+<header>
+
+<div class="nav">
+
+```
+<div class="logo">
+
+    <div class="logo-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2v20"/>
+            <path d="M4.9 5.5l14.2 13"/>
+            <path d="M19.1 5.5L4.9 18.5"/>
+            <path d="M2 12h20"/>
+        </svg>
+    </div>
+
+    <span id="siteName">WinterPulse</span>
+
+</div>
+
+<div class="nav-actions">
+
+    <button
+        class="icon-btn"
+        id="langBtn"
+        title="Переключить язык"
+        aria-label="Переключить язык"
+    >
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3 12h18"></path>
+            <path d="M12 3c3 3 3 15 0 18"></path>
+            <path d="M12 3c-3 3-3 15 0 18"></path>
+        </svg>
+    </button>
+
+    <button
+        class="icon-btn"
+        id="cityBtn"
+        title="Выбрать город"
+        aria-label="Выбрать город"
+    >
+        <svg viewBox="0 0 24 24">
+            <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"></path>
+            <circle cx="12" cy="9" r="2.4"></circle>
+        </svg>
+    </button>
+
+</div>
+```
+
+</div>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+```
+<div class="eyebrow" id="eyebrow">
+    До Нового года
+</div>
+
+<h1>2027</h1>
+
+<p id="heroText">
+    Зимняя атмосфера, погода твоего города и время до Нового года.
+</p>
+
+<div class="countdown">
+
+    <div class="time-card">
+        <div class="time-number" id="days">00</div>
+        <div class="time-label" id="daysLabel">дней</div>
+    </div>
+
+    <div class="time-card">
+        <div class="time-number" id="hours">00</div>
+        <div class="time-label" id="hoursLabel">часов</div>
+    </div>
+
+    <div class="time-card">
+        <div class="time-number" id="minutes">00</div>
+        <div class="time-label" id="minutesLabel">минут</div>
+    </div>
+
+    <div class="time-card">
+        <div class="time-number" id="seconds">00</div>
+        <div class="time-label" id="secondsLabel">секунд</div>
+    </div>
+
+</div>
+```
+
+</section>
+
+<section class="info-grid">
+
+```
+<div class="panel">
+
+    <div class="panel-title">
+
+        <h2 id="weatherTitle">
+            Погода
+        </h2>
+
+        <button
+            class="city-select"
+            id="openCity"
+            type="button"
+        >
+            Выбрать город
+        </button>
+
+    </div>
+
+    <div
+        class="city-name"
+        id="selectedCity"
+    >
+        Стерлитамак
+    </div>
+
+    <div
+        class="weather-text"
+        id="weatherDescription"
+    >
+        Загрузка погоды...
+    </div>
+
+    <div
+        class="weather-temp"
+        id="temperature"
+    >
+        --°
+    </div>
+
+    <div class="stat">
+
+        <span id="feelsLabel">
+            Ощущается
+        </span>
+
+        <strong id="feels">
+            --°
+        </strong>
+
+    </div>
+
+    <div class="stat">
+
+        <span id="windLabel">
+            Ветер
+        </span>
+
+        <strong id="wind">
+            -- км/ч
+        </strong>
+
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        <h2 id="aboutTitle">
+            WinterPulse
+        </h2>
+    </div>
+
+    <div class="stat">
+
+        <span id="cityLabel">
+            Город
+        </span>
+
+        <strong id="miniCity">
+            Стерлитамак
+        </strong>
+
+    </div>
+
+    <div class="stat">
+
+        <span id="yearLabel">
+            Год
+        </span>
+
+        <strong>
+            2027
+        </strong>
+
+    </div>
+
+    <div class="stat">
+
+        <span id="websiteLabel">
+            Сайт
+        </span>
+
+        <strong>
+            WinterPulse
+        </strong>
+
+    </div>
+
+    <div class="stat">
+
+        <span id="languageLabel">
+            Язык
+        </span>
+
+        <strong id="currentLanguage">
+            Русский
+        </strong>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+</main>
+
+<footer id="footerText">
+    WinterPulse · Новый год 2027 · Погода твоего города
+</footer>
+
+<div
+    class="modal"
+    id="cityModal"
+    aria-hidden="true"
+>
+
+```
+<div class="modal-card">
+
+    <button
+        class="icon-btn close"
+        id="closeCity"
+        type="button"
+        aria-label="Закрыть"
+    >
+        <svg viewBox="0 0 24 24">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6L6 18"></path>
+        </svg>
+    </button>
+
+    <h3 id="chooseCityTitle">
+        Выберите город
+    </h3>
+
+    <div
+        class="city-grid"
+        id="cityGrid"
+    ></div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+/* =========================================================
+   CITIES
+========================================================= */
+
+const cities = [
+
+    {
+        nameRu:"Стерлитамак",
+        nameZh:"斯捷尔利塔马克",
+        lat:53.6242,
+        lon:55.9502
+    },
+
+    {
+        nameRu:"Самара",
+        nameZh:"萨马拉",
+        lat:53.1959,
+        lon:50.1002
+    },
+
+    {
+        nameRu:"Пекин",
+        nameZh:"北京",
+        lat:39.9042,
+        lon:116.4074
+    },
+
+    {
+        nameRu:"Уфа",
+        nameZh:"乌法",
+        lat:54.7388,
+        lon:55.9721
+    },
+
+    {
+        nameRu:"Москва",
+        nameZh:"莫斯科",
+        lat:55.7558,
+        lon:37.6173
+    },
+
+    {
+        nameRu:"Казань",
+        nameZh:"喀山",
+        lat:55.7961,
+        lon:49.1064
+    },
+
+    {
+        nameRu:"Санкт-Петербург",
+        nameZh:"圣彼得堡",
+        lat:59.9343,
+        lon:30.3351
+    },
+
+    {
+        nameRu:"Екатеринбург",
+        nameZh:"叶卡捷琳堡",
+        lat:56.8389,
+        lon:60.6057
+    }
+
+];
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+let language =
+    localStorage.getItem(
+        "winterpulse_language"
+    ) || "ru";
+
+const translations = {
+
+    ru: {
+
+        siteName:"WinterPulse",
+
+        eyebrow:"До Нового года",
+
+        heroText:
+            "Зимняя атмосфера, погода твоего города и время до Нового года.",
+
+        days:"дней",
+        hours:"часов",
+        minutes:"минут",
+        seconds:"секунд",
+
+        weather:"Погода",
+        chooseCity:"Выбрать город",
+
+        weatherLoading:
+            "Загрузка погоды...",
+
+        feels:"Ощущается",
+        wind:"Ветер",
+
+        about:"WinterPulse",
+
+        city:"Город",
+        year:"Год",
+        website:"Сайт",
+        language:"Язык",
+
+        russian:"Русский",
+        chinese:"Китайский",
+
+        chooseCityTitle:
+            "Выберите город",
+
+        footer:
+            "WinterPulse · Новый год 2027 · Погода твоего города",
+
+        weatherNames:{
+            0:"Ясно",
+            1:"Преимущественно ясно",
+            2:"Переменная облачность",
+            3:"Пасмурно",
+            45:"Туман",
+            48:"Туман с изморозью",
+            51:"Лёгкая морось",
+            53:"Морось",
+            55:"Сильная морось",
+            61:"Небольшой дождь",
+            63:"Дождь",
+            65:"Сильный дождь",
+            71:"Небольшой снег",
+            73:"Снег",
+            75:"Сильный снег",
+            80:"Ливень",
+            81:"Сильный ливень",
+            82:"Очень сильный ливень",
+            95:"Гроза",
+            96:"Гроза с градом",
+            99:"Сильная гроза"
+        }
+
+    },
+
+    zh: {
+
+        siteName:"WinterPulse",
+
+        eyebrow:"距离新年",
+
+        heroText:
+            "冬日氛围、城市天气以及距离新年的时间。",
+
+        days:"天",
+        hours:"小时",
+        minutes:"分钟",
+        seconds:"秒",
+
+        weather:"天气",
+        chooseCity:"选择城市",
+
+        weatherLoading:
+            "正在加载天气...",
+
+        feels:"体感温度",
+        wind:"风速",
+
+        about:"WinterPulse",
+
+        city:"城市",
+        year:"年份",
+        website:"网站",
+        language:"语言",
+
+        russian:"俄语",
+        chinese:"中文",
+
+        chooseCityTitle:
+            "选择城市",
+
+        footer:
+            "WinterPulse · 2027 新年 · 你的城市天气",
+
+        weatherNames:{
+            0:"晴朗",
+            1:"大致晴朗",
+            2:"局部多云",
+            3:"阴天",
+            45:"雾",
+            48:"雾和霜",
+            51:"小毛毛雨",
+            53:"毛毛雨",
+            55:"大毛毛雨",
+            61:"小雨",
+            63:"中雨",
+            65:"大雨",
+            71:"小雪",
+            73:"降雪",
+            75:"大雪",
+            80:"阵雨",
+            81:"强阵雨",
+            82:"暴雨",
+            95:"雷暴",
+            96:"雷暴伴冰雹",
+            99:"强雷暴"
+        }
+
+    }
+
+};
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const langBtn =
+    document.getElementById("langBtn");
+
+const cityBtn =
+    document.getElementById("cityBtn");
+
+const cityModal =
+    document.getElementById("cityModal");
+
+const openCity =
+    document.getElementById("openCity");
+
+const closeCity =
+    document.getElementById("closeCity");
+
+const cityGrid =
+    document.getElementById("cityGrid");
+
+let currentCity =
+    localStorage.getItem(
+        "winterpulse_city"
+    ) || "Стерлитамак";
+
+/* =========================================================
+   CITY LIST
+========================================================= */
+
+function buildCityList(){
+
+    cityGrid.innerHTML = "";
+
+    cities.forEach(city => {
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+        button.className = "city-option";
+
+        button.textContent =
+            language === "ru"
+                ? city.nameRu
+                : city.nameZh;
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                currentCity = city.nameRu;
+
+                localStorage.setItem(
+                    "winterpulse_city",
+                    currentCity
+                );
+
+                cityModal.classList.remove("show");
+                cityModal.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+                updateCityUI();
+                loadWeather();
+
+            }
+        );
+
+        cityGrid.appendChild(button);
+
+    });
+
+}
+
+/* =========================================================
+   CITY UI
+========================================================= */
+
+function getCurrentCity(){
+
+    return cities.find(
+        city => city.nameRu === currentCity
+    ) || cities[0];
+
+}
+
+function updateCityUI(){
+
+    const city =
+        getCurrentCity();
+
+    document.getElementById(
+        "selectedCity"
+    ).textContent =
+        language === "ru"
+            ? city.nameRu
+            : city.nameZh;
+
+    document.getElementById(
+        "miniCity"
+    ).textContent =
+        language === "ru"
+            ? city.nameRu
+            : city.nameZh;
+
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openCityModal(){
+
+    buildCityList();
+
+    cityModal.classList.add("show");
+
+    cityModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+function closeCityModal(){
+
+    cityModal.classList.remove("show");
+
+    cityModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+cityBtn.addEventListener(
+    "click",
+    openCityModal
+);
+
+openCity.addEventListener(
+    "click",
+    openCityModal
+);
+
+closeCity.addEventListener(
+    "click",
+    closeCityModal
+);
+
+cityModal.addEventListener(
+    "click",
+    event => {
+
+        if(event.target === cityModal){
+            closeCityModal();
+        }
+
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(event.key === "Escape"){
+            closeCityModal();
+        }
+
+    }
+);
+
+/* =========================================================
+   WEATHER
+========================================================= */
+
+async function loadWeather(){
+
+    const city =
+        getCurrentCity();
+
+    const t =
+        translations[language];
+
+    document.getElementById(
+        "weatherDescription"
+    ).textContent =
+        t.weatherLoading;
+
+    try{
+
+        const url =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=" + city.lat +
+            "&longitude=" + city.lon +
+            "&current=" +
+            "temperature_2m," +
+            "apparent_temperature," +
+            "weather_code," +
+            "wind_speed_10m" +
+            "&wind_speed_unit=kmh";
+
+        const response =
+            await fetch(url);
+
+        if(!response.ok){
+            throw new Error(
+                "Weather request failed"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        const weather =
+            data.current;
+
+        document.getElementById(
+            "temperature"
+        ).textContent =
+            Math.round(
+                weather.temperature_2m
+            ) + "°";
+
+        document.getElementById(
+            "feels"
+        ).textContent =
+            Math.round(
+                weather.apparent_temperature
+            ) + "°";
+
+        document.getElementById(
+            "wind"
+        ).textContent =
+            Math.round(
+                weather.wind_speed_10m
+            ) +
+            (
+                language === "ru"
+                    ? " км/ч"
+                    : " 公里/小时"
+            );
+
+        document.getElementById(
+            "weatherDescription"
+        ).textContent =
+            t.weatherNames[
+                weather.weather_code
+            ] || (
+                language === "ru"
+                    ? "Погода обновлена"
+                    : "天气已更新"
+            );
+
+    }catch(error){
+
+        document.getElementById(
+            "weatherDescription"
+        ).textContent =
+            language === "ru"
+                ? "Не удалось получить погоду"
+                : "无法获取天气";
+
+        document.getElementById(
+            "temperature"
+        ).textContent = "--°";
+
+        document.getElementById(
+            "feels"
+        ).textContent = "--°";
+
+        document.getElementById(
+            "wind"
+        ).textContent =
+            language === "ru"
+                ? "-- км/ч"
+                : "-- 公里/小时";
+
+    }
+
+}
+
+/* =========================================================
+   LANGUAGE UI
+========================================================= */
+
+function applyLanguage(){
+
+    const t =
+        translations[language];
+
+    document.documentElement.lang =
+        language === "ru"
+            ? "ru"
+            : "zh-CN";
+
+    document.title =
+        language === "ru"
+            ? "WinterPulse — Новый год 2027"
+            : "WinterPulse — 2027 新年";
+
+    document.getElementById(
+        "siteName"
+    ).textContent =
+        t.siteName;
+
+    document.getElementById(
+        "eyebrow"
+    ).textContent =
+        t.eyebrow;
+
+    document.getElementById(
+        "heroText"
+    ).textContent =
+        t.heroText;
+
+    document.getElementById(
+        "daysLabel"
+    ).textContent =
+        t.days;
+
+    document.getElementById(
+        "hoursLabel"
+    ).textContent =
+        t.hours;
+
+    document.getElementById(
+        "minutesLabel"
+    ).textContent =
+        t.minutes;
+
+    document.getElementById(
+        "secondsLabel"
+    ).textContent =
+        t.seconds;
+
+    document.getElementById(
+        "weatherTitle"
+    ).textContent =
+        t.weather;
+
+    document.getElementById(
+        "openCity"
+    ).textContent =
+        t.chooseCity;
+
+    document.getElementById(
+        "feelsLabel"
+    ).textContent =
+        t.feels;
+
+    document.getElementById(
+        "windLabel"
+    ).textContent =
+        t.wind;
+
+    document.getElementById(
+        "aboutTitle"
+    ).textContent =
+        t.about;
+
+    document.getElementById(
+        "cityLabel"
+    ).textContent =
+        t.city;
+
+    document.getElementById(
+        "yearLabel"
+    ).textContent =
+        t.year;
+
+    document.getElementById(
+        "websiteLabel"
+    ).textContent =
+        t.website;
+
+    document.getElementById(
+        "languageLabel"
+    ).textContent =
+        t.language;
+
+    document.getElementById(
+        "currentLanguage"
+    ).textContent =
+        language === "ru"
+            ? t.russian
+            : t.chinese;
+
+    document.getElementById(
+        "chooseCityTitle"
+    ).textContent =
+        t.chooseCityTitle;
+
+    document.getElementById(
+        "footerText"
+    ).textContent =
+        t.footer;
+
+    updateCityUI();
+    buildCityList();
+    loadWeather();
+
+}
+
+/* =========================================================
+   LANGUAGE BUTTON
+========================================================= */
+
+langBtn.addEventListener(
+    "click",
+    () => {
+
+        language =
+            language === "ru"
+                ? "zh"
+                : "ru";
+
+        localStorage.setItem(
+            "winterpulse_language",
+            language
+        );
+
+        applyLanguage();
+
+    }
+);
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function updateCountdown(){
+
+    const now =
+        new Date();
+
+    const target =
+        new Date(
+            now.getFullYear() + 1,
+            0,
+            1,
+            0,
+            0,
+            0
+        );
+
+    const difference =
+        Math.max(
+            0,
+            target - now
+        );
+
+    const totalSeconds =
+        Math.floor(
+            difference / 1000
+        );
+
+    const days =
+        Math.floor(
+            totalSeconds / 86400
+        );
+
+    const hours =
+        Math.floor(
+            (totalSeconds % 86400) / 3600
+        );
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
+
+    document.getElementById(
+        "days"
+    ).textContent =
+        String(days).padStart(2,"0");
+
+    document.getElementById(
+        "hours"
+    ).textContent =
+        String(hours).padStart(2,"0");
+
+    document.getElementById(
+        "minutes"
+    ).textContent =
+        String(minutes).padStart(2,"0");
+
+    document.getElementById(
+        "seconds"
+    ).textContent =
+        String(seconds).padStart(2,"0");
+
+}
+
+updateCountdown();
+
+setInterval(
+    updateCountdown,
+    1000
+);
+
+/* =========================================================
+   START
+========================================================= */
+
+applyLanguage();
+
+</script>
+
+</body>
+</html>
